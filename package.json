@@ -10,6 +10,8 @@
     "express": "^4.17.3",
     "jsforce": "^1.11.0",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^5.4.0",
+    "mongoose": "^7.1.0",
     "nodemon": "^2.0.15"
   },
   "scripts": {
