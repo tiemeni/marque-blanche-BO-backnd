@@ -6,10 +6,9 @@ const utilisateurModel = mongoose.Schema({
         required: true
     },
     prenom: {
-        type: String,
-        required: true
+        type: String
     },
-    date_naiss: {
+    dateNaiss: {
         type: Date,
         required: true
     },
@@ -33,9 +32,10 @@ const utilisateurModel = mongoose.Schema({
         type: String,
         required: true
     },
-    idDroits: [
+    droits: [
         {
             type: mongoose.Schema.Types.ObjectId,
+            required: true,
             ref: 'Droits'
         }
     ]
