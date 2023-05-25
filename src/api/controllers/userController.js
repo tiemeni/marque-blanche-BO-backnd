@@ -32,9 +32,6 @@ const handleNewUser = async (req, res) => {
             "password": hashedPwd,
             "droits": droits
         });
-
-        console.log(result);
-
         res.status(201).json({ 'success': `Utilisateur ${email} crée!` });
     } catch (err) {
         res.status(500).json({ 'message': err.message });
@@ -43,8 +40,7 @@ const handleNewUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const foundUsers = await User.find();
-        console.log("found users : " + foundUsers)
+        const foundUsers =  User.find();
         res.status(201).json(foundUsers);
     } catch (error) {
         res.status(500).json({ 'message': error.message });
