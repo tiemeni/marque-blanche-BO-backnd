@@ -20,7 +20,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
 server.get("/", (req, res) => { 
-  res.send("you're on gatewaydoc port !");
+  res.send("BIENVENUE CHEZ GATEWAY !!");
 })
 // routes
 server.use('/users/register', require('./src/routes/userRoutes/register'));
