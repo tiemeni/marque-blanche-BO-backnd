@@ -47,4 +47,3 @@ mongoose.connection.once('open', () => {
 })
 
 
-module.exports = server;
