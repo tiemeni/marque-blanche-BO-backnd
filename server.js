@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const mongoose = require("mongoose");
-const connectDB = require('./config/DBconfig/dataBaseConfig');
+const connectDB = require('./src/config/DBconfig/dataBaseConfig');
 const PORT = process.env.PORT || 3500;
 require("dotenv").config({
   path: path.join(__dirname, ".env"),
@@ -19,14 +19,14 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-server.get("/", (req, res) => {
+server.get("/", (req, res) => { 
   res.send("you're on gatewaydoc port !");
 })
 // routes
-server.use('/users/register', require('./routes/userRoutes/register'));
-server.use('/users/getUsers', require('./routes/userRoutes/getAllUsers'));
-server.use('/users/addrole', require('./routes/userRoutes/addRole'));
-server.use('/users/getUserRoles', require('./routes/userRoutes/getUserRoles'));
+server.use('/users/register', require('./src/routes/userRoutes/register'));
+server.use('/users/getUsers', require('./src/routes/userRoutes/getAllUsers'));
+server.use('/users/addrole', require('./src/routes/userRoutes/addRole'));
+server.use('/users/getUserRoles', require('./src/routes/userRoutes/getUserRoles'));
 server.all('*', (req, res) => {
   res.status(404);
   if (req.accepts('html')) {
@@ -47,3 +47,4 @@ mongoose.connection.once('open', () => {
 })
 
 
+module.exports = server;
