@@ -19,6 +19,9 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
+server.get("/", (req, res) => {
+  res.send("you're on gatewaydoc port !");
+})
 // routes
 server.use('/users/register', require('./routes/userRoutes/register'));
 server.use('/users/getUsers', require('./routes/userRoutes/getAllUsers'));
@@ -44,3 +47,4 @@ mongoose.connection.once('open', () => {
 })
 
 
+module.exports = server;
