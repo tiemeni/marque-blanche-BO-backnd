@@ -40,7 +40,7 @@ const handleNewUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const foundUsers =  User.find();
+        const foundUsers = await User.find();
         res.status(201).json(foundUsers);
     } catch (error) {
         res.status(500).json({ 'message': error.message });
