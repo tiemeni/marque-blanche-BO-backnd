@@ -6,7 +6,7 @@ const handleNewRole = async (req, res) => {
 
     // check for duplicate usernames in the db
     const duplicate = await Role.findOne({ nom: nom }).exec();
-    if (duplicate) return res.sendStatus(409); //Conflict 
+    if (duplicate) return res.status(409).json({ error: `${duplicate.nom} already exist` }); //Conflict 
 
     try {
         //create and store the new Role

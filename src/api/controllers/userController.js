@@ -13,8 +13,6 @@ const handleNewUser = async (req, res) => {
         }
     }
     const { nom, prenom, dateNaiss, sexe, telephone, ville, email, password, initiales, actif, droits } = req.body;
-    console.log(`password : ${password}`);
-    console.log("Init");
     // if (!nom || !prenom || !dateNaiss || !sexe || !telephone || !ville || !email || !pwd || !droits || !actif ) return res.status(400).json({ 'message': 'Entrez tous les champs requis.' });
 
     // check for duplicate usernames in the db
@@ -33,7 +31,6 @@ const handleNewUser = async (req, res) => {
         //encrypt the password
         console.log("hashing pwd");
         const hashedPwd = await bcrypt.hash(password, 10);
-        console.log("pwd hashed " + hashedPwd);
 
         //create and store the new user
         const result = await User.create({

@@ -46,7 +46,7 @@ const utilisateurModel = mongoose.Schema({
     droits: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true, "veuillez entrer choisir un droits"],
+            required: [true, "veuillez choisir un droits"],
             ref: 'Droits'
         }
     ]
