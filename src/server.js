@@ -23,6 +23,7 @@ server.use('/users/register', require('./routes/register'));
 server.use('/users/getUsers', require('./routes/getAllUsers'));
 server.use('/users/addrole', require('./routes/addRole'));
 server.use('/users/getUserRoles', require('./routes/getUserRoles'));
+server.use('/users/getAllRoles', require('./routes/getAllRoles'));
 server.all('*', (req, res) => {
   res.status(404);
   if (req.accepts('html')) {

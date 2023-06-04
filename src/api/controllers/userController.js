@@ -1,14 +1,27 @@
 const User = require('../../models/utilisateur');
-const UserRole = require('../../models/droits');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
+
 
 const handleNewUser = async (req, res) => {
-    const { nom, prenom, dateNaiss, sexe, telephone, ville, email, pwd, droits } = req.body;
-    if (!nom || !prenom || !dateNaiss || !sexe || !telephone || !ville || !email || !pwd || !droits ) return res.status(400).json({ 'message': 'Entrez les champs requis.' });
+    if(req.file !== undefined){
+        console.log("req.file not empty");
+        var photo = {
+            data: fs.readFileSync(path.join('src/uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        }
+    }
+    const { nom, prenom, dateNaiss, sexe, telephone, ville, email, password, initiales, actif, droits } = req.body;
+    console.log(`password : ${password}`);
+    console.log("Init");
+    // if (!nom || !prenom || !dateNaiss || !sexe || !telephone || !ville || !email || !pwd || !droits || !actif ) return res.status(400).json({ 'message': 'Entrez tous les champs requis.' });
 
     // check for duplicate usernames in the db
+    console.log("finding email in db");
     const duplicate = await User.findOne({ email: email }).exec();
-    if (duplicate) return res.sendStatus(409); //Conflict
+    console.log("email found");
+    if (duplicate) return res.status(409).json({error: `${duplicate.email} already exists`}); //Conflict
     // for (let i = 0; droits.length; i++){
     //     const roleExist = await UserRole.findById(droits[i]).exec();
     //     console.log(roleExist);
@@ -18,7 +31,9 @@ const handleNewUser = async (req, res) => {
 
     try {
         //encrypt the password
-        const hashedPwd = await bcrypt.hash(pwd, 10);
+        console.log("hashing pwd");
+        const hashedPwd = await bcrypt.hash(password, 10);
+        console.log("pwd hashed " + hashedPwd);
 
         //create and store the new user
         const result = await User.create({
@@ -30,12 +45,19 @@ const handleNewUser = async (req, res) => {
             "ville":ville,
             "email": email,
             "password": hashedPwd,
+            "initiales": initiales,
+            "photo": photo,
+            "actif": actif,
             "droits": droits
         });
 
         console.log(result);
 
-        res.status(201).json({ 'success': `Utilisateur ${email} crée!` });
+        // res.status(201).json({ 'success': `Utilisateur ${email} crée!` });
+        res.json({
+            body: req.body,
+            file: req.file
+        })
     } catch (err) {
         res.status(500).json({ 'message': err.message });
     }

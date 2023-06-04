@@ -22,4 +22,14 @@ const handleNewRole = async (req, res) => {
     }
 }
 
-module.exports = { handleNewRole };
+const getAllRoles = async (req, res) => {
+    try {
+        const foundRoles = await Role.find();
+        console.log("found roles : " + foundRoles)
+        res.status(201).json(foundRoles);
+    } catch (error) {
+        res.status(500).json({ 'message': error.message });
+    }
+}
+
+module.exports = { handleNewRole, getAllRoles };
