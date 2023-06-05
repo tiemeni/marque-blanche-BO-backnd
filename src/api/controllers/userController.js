@@ -49,8 +49,6 @@ const handleNewUser = async (req, res) => {
         });
 
         console.log(result);
-
-        // res.status(201).json({ 'success': `Utilisateur ${email} crée!` });
         res.json({
             body: req.body,
             file: req.file
@@ -63,7 +61,6 @@ const handleNewUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
     try {
         const foundUsers = await User.find();
-        console.log("found users : " + foundUsers)
         res.status(201).json(foundUsers);
     } catch (error) {
         res.status(500).json({ 'message': error.message });
