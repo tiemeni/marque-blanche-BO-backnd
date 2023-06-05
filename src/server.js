@@ -26,12 +26,12 @@ server.use('/users/addrole', require('./routes/addRole'));
 server.use('/users/getUserWithRoles', require('./routes/getUserRoles'));
 server.use('/users/getAllRoles', require('./routes/getAllRoles'));
 
-server.use('users/addSpecialite', require('./routes/addSpecialite'));
-server.use('users/getSpecialite', require('./routes/getAllSpecialite'));
+server.use('/users/addSpecialite', require('./routes/addSpecialite'));
+server.use('/users/getSpecialite', require('./routes/getAllSpecialite'));
 
-server.use('users/addPracticien', require('./routes/addPracticien'));
-server.use('users/getPracticien', require('./routes/addPracticien'));
-server.use('users/getPracticienWithSpecialite', require('./routes/getPracticienSpecialite'));
+server.use('/users/addPracticien', require('./routes/addPracticien'));
+server.use('/users/getPracticien', require('./routes/getAllPracticien'));
+server.use('/users/getPracticienWithSpecialite', require('./routes/getPracticienSpecialite'));
 
 
 

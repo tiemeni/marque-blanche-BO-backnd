@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const specialiteModel = mongoose.Schema({
     nom: {
         type: String,
-        required: true
+        required: [true, "veuillez entrer un nom"]
     },
     practicien: {
         type: mongoose.Schema.Types.ObjectId,

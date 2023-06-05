@@ -1,4 +1,3 @@
-const { Int32 } = require('mongodb');
 const mongoose = require('mongoose');
 
 const practicienModel = mongoose.Schema({
@@ -11,7 +10,7 @@ const practicienModel = mongoose.Schema({
         required: [true, "veillez entrer un status"]
     },
     prixDefault: {
-        type: Int32,
+        type: Number,
         required: [true, "veillez entrer un prix par default"]
     },
     idUtilisateur: {
@@ -26,3 +25,5 @@ const practicienModel = mongoose.Schema({
         }
     ]
 });
+
+module.exports = mongoose.model('Practicien', practicienModel);
