@@ -23,19 +23,19 @@ server.get("/", (req, res) => {
   res.send("BIENVENUE CHEZ GATEWAY !!");
 })
 // routes
-server.use('/users/register', require('./routes/register'));
-server.use('/users/getUsers', require('./routes/getAllUsers'));
+server.use('/users/register', require('./src/routes/userRoutes/register'));
+server.use('/users/getUsers', require('./src/routes/userRoutes/getAllUsers'));
 
-server.use('/users/addrole', require('./routes/addRole'));
-server.use('/users/getUserWithRoles', require('./routes/getUserRoles'));
-server.use('/users/getAllRoles', require('./routes/getAllRoles'));
+server.use('/users/addrole', require('./src/routes/userRoutes/addRole'));
+server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRoles'));
+server.use('/users/getAllRoles', require('./src/routes/getAllRoles'));
 
-server.use('users/addSpecialite', require('./routes/addSpecialite'));
-server.use('users/getSpecialite', require('./routes/getAllSpecialite'));
+server.use('users/addSpecialite', require('./src/routes/addSpecialite'));
+server.use('users/getSpecialite', require('./src/routes/getAllSpecialite'));
 
-server.use('users/addPracticien', require('./routes/addPracticien'));
-server.use('users/getPracticien', require('./routes/addPracticien'));
-server.use('users/getPracticienWithSpecialite', require('./routes/getPracticienSpecialite'));
+server.use('users/addPracticien', require('./src/routes/addPracticien'));
+server.use('users/getPracticien', require('./src/routes/getAllPracticien'));
+server.use('users/getPracticienWithSpecialite', require('./src/routes/getPracticienSpecialite'));
 
 
 

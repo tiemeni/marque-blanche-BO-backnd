@@ -11,7 +11,7 @@ const practicienModel = mongoose.Schema({
         required: [true, "veillez entrer un status"]
     },
     prixDefault: {
-        type: Int32,
+        type: Number,
         required: [true, "veillez entrer un prix par default"]
     },
     idUtilisateur: {
