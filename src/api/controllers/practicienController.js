@@ -1,4 +1,5 @@
 const Practicien = require('../../models/practicien');
+const utilisateur = require('../../models/utilisateur');
 
 const handleNewPracticien = async (req, res) => {
     const { matricule, status, prixDefault, idUtilisateur, idSpecialite } = req.body;
@@ -29,7 +30,7 @@ const getAllPracticien = async (req, res) => {
         console.log("found practicien : " + foundPracticien)
         res.status(201).json(foundPracticien);
     } catch (error) {
-        res.status(500).json({ 'message': error.message });
+        res.status(500).json({ 'message': 'Server Error' });
     }
 }
 
@@ -40,8 +41,54 @@ const getPracticienWithSpecialite = async (req, res) => {
         console.log("found user specialite : " + foundpractSpec)
         res.status(201).json(foundpractSpec);
     } catch (error) {
-        res.status(500).json({ 'message': error.message });
+        res.status(500).json({ 'message': 'Server Error' });
     }
 }
 
-module.exports = { handleNewPracticien, getAllPracticien, getPracticienWithSpecialite }
+const updatePracticienById = async (req, res) => {
+    try {
+        const filter = {idUtilisateur: req.params.userid};
+        if (filter.idUtilisateur === undefined) res.status(404).json({ 'message': 'no param passed' });
+        const updateDoc = {
+            $set: {
+                prixDefault: req.body.prixDefault
+            }
+        };
+        const result = await Practicien.updateOne(filter, updateDoc);
+        console.log(`${result.matchedCount} document matched`);
+        console.log(`${result.modifiedCount} documents updated`);
+        if (result.modifiedCount == 0){
+            res.status(404).json({'failure': `${result.modifiedCount} practicien updated/found`});
+        }else{
+            res.status(201).json({'success': `${result.modifiedCount} documents updated`});
+        }
+        // const foundPracticien = await Practicien.findOne();
+    } catch (error) {
+        console.log(`Error when updating : ${error}`);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+}
+
+const deletePracticienById = async (req, res) => {
+    try {
+        const practFilter = {idUtilisateur: req.params.userid};
+        const userFilter = {_id: req.params.userid};
+        if (practFilter.idUtilisateur === undefined) res.status(404).json({ 'message': 'no param passed' });
+        const deletePractResult = await Practicien.deleteOne(practFilter);
+        console.log(`${deletePractResult.deletedCount} user was deleted`);
+        // const deleteUserResult = await utilisateur.deleteOne(userFilter);
+        // console.log(`${deleteUserResult.deletedCount} user was deleted`);
+        if(deletePractResult.deletedCount == 0){ //&& deleteuserResult.deletedCount == 0){
+            res.status(404).json({'failure': `${deletePractResult.deletedCount} user deleted/found`});
+        }else{
+            res.status(201).json({'success': `${deletePractResult.deletedCount} user deleted`});
+            const deleteUserResult = await utilisateur.deleteOne(userFilter);
+            console.log(`${deleteUserResult.deletedCount} ${userFilter._id} deleted`)
+        }
+    } catch (error) {
+        console.log(`Error when deleting ${error}`);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+}
+
+module.exports = { handleNewPracticien, getAllPracticien, getPracticienWithSpecialite, updatePracticienById, deletePracticienById }

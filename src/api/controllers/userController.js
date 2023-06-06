@@ -58,6 +58,19 @@ const handleNewUser = async (req, res) => {
     }
 }
 
+const getUserById = async (req, res) => {
+    try {
+        const filter = {_id: req.params.userid};
+        if (filter._id === undefined) res.status(404).json({ 'message': 'no param passed' });
+        const foundUser = await User.findOne(filter);
+        if(foundUser == null) return res.status(404).json({'message': 'no user found'});
+        console.log("found user : " + foundUser)
+        res.status(201).json(foundUser);
+    } catch (error) {
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+}
+
 const getAllUsers = async (req, res) => {
     try {
         const foundUsers = await User.find();
@@ -101,6 +114,7 @@ const updateUserNameById = async (req, res) => {
         res.status(500).json({ 'message': 'Server Error' });
     }
 }
+
 const deleteUserById = async (req, res) => {
     try {
         const filter = {_id: req.params.userid};
@@ -118,4 +132,4 @@ const deleteUserById = async (req, res) => {
     }
 }
 
-module.exports = { handleNewUser, getAllUsers, getUserRoles, updateUserNameById, deleteUserById };
+module.exports = { handleNewUser, getUserById, getAllUsers, getUserRoles, updateUserNameById, deleteUserById };

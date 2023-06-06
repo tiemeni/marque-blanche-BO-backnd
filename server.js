@@ -25,6 +25,7 @@ server.get("/", (req, res) => {
 // routes
 server.use('/users/register', require('./src/routes/userRoutes/register'));
 server.use('/users/getUsers', require('./src/routes/userRoutes/getAllUsers'));
+server.use('/users/getUserById', require('./src/routes/userRoutes/getUserById'));
 server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRoles'));
 server.use('/users/updateUserNameById', require('./src/routes/userRoutes/updateUserNameById'));
 server.use('/users/deleteUserById', require('./src/routes/userRoutes/deleteUserById'));
@@ -41,6 +42,8 @@ server.use('/users/deleteSpecialite', require('./src/routes/specialite/deleteSpe
 server.use('/users/addPracticien', require('./src/routes/practicien/addPracticien'));
 server.use('/users/getPracticien', require('./src/routes/practicien/getAllPracticien'));
 server.use('/users/getPracticienWithSpecialite', require('./src/routes/practicien/getPracticienSpecialite'));
+server.use('/users/updatePracticienById', require('./src/routes/practicien/updatePracticienById'));
+server.use('/users/deletePracticienById', require('./src/routes/practicien/deletePracticienById'));
 
 
 
