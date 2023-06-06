@@ -29,15 +29,18 @@ server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRo
 server.use('/users/updateUserNameById', require('./src/routes/userRoutes/updateUserNameById'));
 server.use('/users/deleteUserById', require('./src/routes/userRoutes/deleteUserById'));
 
-server.use('/users/addrole', require('./src/routes/userRoutes/addRole'));
-server.use('/users/getAllRoles', require('./src/routes/getAllRoles'));
+server.use('/users/addrole', require('./src/routes/droits/addRole'));
+server.use('/users/getAllRoles', require('./src/routes/droits/getAllRoles'));
 
-server.use('users/addSpecialite', require('./src/routes/addSpecialite'));
-server.use('users/getSpecialite', require('./src/routes/getAllSpecialite'));
+server.use('/users/addSpecialite', require('./src/routes/specialite/addSpecialite'));
+server.use('/users/getSpecialite', require('./src/routes/specialite/getAllSpecialite'));
+server.use('/users/updateSpecialite', require('./src/routes/specialite/updateSpecialite'));
+server.use('/users/deleteSpecialite', require('./src/routes/specialite/deleteSpecialite'));
 
-server.use('users/addPracticien', require('./src/routes/addPracticien'));
-server.use('users/getPracticien', require('./src/routes/getAllPracticien'));
-server.use('users/getPracticienWithSpecialite', require('./src/routes/getPracticienSpecialite'));
+
+server.use('/users/addPracticien', require('./src/routes/practicien/addPracticien'));
+server.use('/users/getPracticien', require('./src/routes/practicien/getAllPracticien'));
+server.use('/users/getPracticienWithSpecialite', require('./src/routes/practicien/getPracticienSpecialite'));
 
 
 
