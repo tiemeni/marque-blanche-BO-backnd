@@ -54,7 +54,7 @@ const handleNewUser = async (req, res) => {
             file: req.file
         })
     } catch (err) {
-        res.status(500).json({ 'message': err.message });
+        res.status(500).json({ 'message': 'Server Error' });
     }
 }
 
@@ -63,19 +63,59 @@ const getAllUsers = async (req, res) => {
         const foundUsers = await User.find();
         res.status(201).json(foundUsers);
     } catch (error) {
-        res.status(500).json({ 'message': error.message });
+        res.status(500).json({ 'message': 'Server Error' });
     }
 }
 
 const getUserRoles = async (req, res) => {
     try {
+        if (req.params.usermail === undefined) res.status(404).json({ 'message': 'no param passed' });
         const foundUserRole = await User.find({email: req.params.usermail}).populate("droits");
         console.log("param : " + req.params.usermail)
         console.log("found user roles : " + foundUserRole)
         res.status(201).json(foundUserRole);
     } catch (error) {
-        res.status(500).json({ 'message': error.message });
+        res.status(500).json({ 'message': 'Server Error' });
     }
 }
 
-module.exports = { handleNewUser, getAllUsers, getUserRoles };
+const updateUserNameById = async (req, res) => {
+    try {
+        const filter = {_id: req.params.userid};
+        if (filter._id === undefined) res.status(404).json({ 'message': 'no param passed' });
+        const updateDoc = {
+            $set: {
+                nom: req.body.nom
+            }
+        };
+        const result = await User.updateOne(filter, updateDoc);
+        console.log(`${result.matchedCount} document matched`);
+        console.log(`${result.modifiedCount} documents updated`);
+        if (result.modifiedCount == 0){
+            res.status(404).json({'failure': `${result.modifiedCount} user updated/found`});
+        }else{
+            res.status(201).json({'success': `${result.modifiedCount} documents updated`});
+        }
+    } catch (error) {
+        console.log(`Error when updating : ${error}`);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+}
+const deleteUserById = async (req, res) => {
+    try {
+        const filter = {_id: req.params.userid};
+        if (filter._id === undefined) res.status(404).json({ 'message': 'no param passed' });
+        const result = await User.deleteOne(filter);
+        console.log(`${result.deletedCount} user was deleted`);
+        if(result.deletedCount == 0){
+            res.status(404).json({'failure': `${result.deletedCount} user deleted/found`});
+        }else{
+            res.status(201).json({'success': `${result.deletedCount} user deleted`});
+        }
+    } catch (error) {
+        console.log(`Error when deleting ${error}`);
+        res.status(500).json({ 'message': 'Server Error' });
+    }
+}
+
+module.exports = { handleNewUser, getAllUsers, getUserRoles, updateUserNameById, deleteUserById };

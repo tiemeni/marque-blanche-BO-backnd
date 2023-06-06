@@ -25,9 +25,11 @@ server.get("/", (req, res) => {
 // routes
 server.use('/users/register', require('./src/routes/userRoutes/register'));
 server.use('/users/getUsers', require('./src/routes/userRoutes/getAllUsers'));
+server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRoles'));
+server.use('/users/updateUserNameById', require('./src/routes/userRoutes/updateUserNameById'));
+server.use('/users/deleteUserById', require('./src/routes/userRoutes/deleteUserById'));
 
 server.use('/users/addrole', require('./src/routes/userRoutes/addRole'));
-server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRoles'));
 server.use('/users/getAllRoles', require('./src/routes/getAllRoles'));
 
 server.use('users/addSpecialite', require('./src/routes/addSpecialite'));
@@ -55,8 +57,7 @@ mongoose.connection.once('open', () => {
   server.listen(PORT, () => {
     console.log(`started on Port ${PORT}`)
   });
-
-})
+});
 
 
 module.exports = server;
