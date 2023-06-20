@@ -24,6 +24,7 @@ server.get("/", (req, res) => {
 })
 // routes
 server.use('/users/register', require('./src/routes/userRoutes/register'));
+server.use('/users/signin', require('./src/routes/userRoutes/signIn'));
 server.use('/users/getUsers', require('./src/routes/userRoutes/getAllUsers'));
 server.use('/users/getUserById', require('./src/routes/userRoutes/getUserById'));
 server.use('/users/getUserWithRoles', require('./src/routes/userRoutes/getUserRoles'));

@@ -2,10 +2,12 @@ const User = require('../../models/utilisateur');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
+const jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.jwt
 
 
 const handleNewUser = async (req, res) => {
-    if(req.file !== undefined){
+    if (req.file !== undefined) {
         console.log("req.file not empty");
         var photo = {
             data: fs.readFileSync(path.join('src/uploads/' + req.file.filename)),
@@ -19,7 +21,7 @@ const handleNewUser = async (req, res) => {
     console.log("finding email in db");
     const duplicate = await User.findOne({ email: email }).exec();
     console.log("email found");
-    if (duplicate) return res.status(409).json({error: `${duplicate.email} already exists`}); //Conflict
+    if (duplicate) return res.status(409).json({ error: `${duplicate.email} already exists` }); //Conflict
     // for (let i = 0; droits.length; i++){
     //     const roleExist = await UserRole.findById(droits[i]).exec();
     //     console.log(roleExist);
@@ -39,7 +41,7 @@ const handleNewUser = async (req, res) => {
             "dateNaiss": dateNaiss,
             "sexe": sexe,
             "telephone": telephone,
-            "ville":ville,
+            "ville": ville,
             "email": email,
             "password": hashedPwd,
             "initiales": initiales,
@@ -132,4 +134,34 @@ const deleteUserById = async (req, res) => {
     }
 }
 
-module.exports = { handleNewUser, getUserById, getAllUsers, getUserRoles, updateUserNameById, deleteUserById };
+const signIn = async (req, res) => {
+    const { email, password } = req.body
+
+    try {
+        const user = await User.findOne({ email }).lean()
+        if (!user) {
+            res.status(404).json({
+                status: false,
+                error: "L'utilisateur n'existe pas dans notre système"
+            })
+        }
+
+        if (await bcrypt.compare(password, user.password)) {
+            const token = jwt.sign({ id: user._id, username: user.email, type: 'user' }, JWT_SECRET, { expiresIn: '1h' })
+            res.status(200).json({
+                status: true,
+                data: {
+                    ...user,
+                    access_token: token
+                }
+            })
+        } else {
+            res.status(406).json({ status: false, error: 'Mot de passe invalide' })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(440).json({ status: 'error', error: 'timed out' })
+    }
+}
+
+module.exports = { handleNewUser, getUserById, getAllUsers, getUserRoles, updateUserNameById, deleteUserById, signIn };
