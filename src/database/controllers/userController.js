@@ -1,4 +1,4 @@
-const User = require('../../models/utilisateur');
+const User = require('../models/utilisateur');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
@@ -15,19 +15,11 @@ const handleNewUser = async (req, res) => {
         }
     }
     const { nom, prenom, dateNaiss, sexe, telephone, ville, email, password, initiales, actif, droits } = req.body;
-    // if (!nom || !prenom || !dateNaiss || !sexe || !telephone || !ville || !email || !pwd || !droits || !actif ) return res.status(400).json({ 'message': 'Entrez tous les champs requis.' });
 
     // check for duplicate usernames in the db
     console.log("finding email in db");
     const duplicate = await User.findOne({ email: email }).exec();
     console.log("email found");
-    if (duplicate) return res.status(409).json({ error: `${duplicate.email} already exists` }); //Conflict
-    // for (let i = 0; droits.length; i++){
-    //     const roleExist = await UserRole.findById(droits[i]).exec();
-    //     console.log(roleExist);
-    //     return
-    //     // if (roleExist == null || undefined) return res.status(409).json({ 'message': `Role ${droits[i]} n'existe pas!` });
-    // }
 
     try {
         //encrypt the password
