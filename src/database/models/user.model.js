@@ -1,28 +1,26 @@
 const mongoose = require('mongoose');
 
 const utilisateurModel = mongoose.Schema({
+    civilite: {
+        type: String,
+        require
+    },
     nom: {
         type: String,
         required: [true, "veuillez entrer votre nom"]
     },
     prenom: {
-        type: String
+        type: String,
+        require
     },
     dateNaiss: {
         type: Date,
-        required: [true, "veuillez entrer votre date de naissance"]
-    },
-    sexe: {
-        type: String,
-        required: [true, "veuillez entrer votre sexe"]
     },
     telephone: {
         type: String,
-        required: [true, "veuillez entrer votre contact"]
     },
     ville: {
         type: String,
-        required: [true, "veuillez entrer votre ville"]
     },
     email: {
         type: String,
@@ -30,7 +28,6 @@ const utilisateurModel = mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "veuillez entrer votre un mot de passe"]
     },
     initiales: {
         type: String

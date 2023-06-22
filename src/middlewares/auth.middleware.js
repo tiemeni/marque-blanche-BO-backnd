@@ -5,8 +5,7 @@ module.exports = async (req, res, next) => {
     let token;
     if (req.headers.authorization) {
         token = req.header("Authorization").replace("Bearer ", "");
-    }
-    else {
+    } else {
         res
             .status(httpStatus.UNAUTHORIZED)
             .send({
@@ -15,7 +14,7 @@ module.exports = async (req, res, next) => {
             });
     }
     try {
-        const data = jwt.verify(token, process.env.JWT_KEY);
+        const data = jwt.verify(token, process.env.jwt);
 
         req.user = data.user;
         req.token = token;
