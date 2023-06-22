@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const practicienController = require('../database/controllers/practicienController')
+const practicienController = require('../database/controllers/practitioner.controller')
 
 router.post('/', practicienController.handleNewPracticien);
 router.delete('/:userId', practicienController.deletePracticienById);

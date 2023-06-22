@@ -1,5 +1,5 @@
-const Practicien = require('../models/practicien');
-const utilisateur = require('../models/utilisateur');
+const Practicien = require('../models/practitioner.model');
+const utilisateur = require('../models/user.model');
 
 const handleNewPracticien = async (req, res) => {
     const { matricule, status, prixDefault, idUtilisateur, idSpecialite } = req.body;

@@ -6,11 +6,12 @@ const path = require("path");
 const PORT = process.env.PORT || 3500;
 
 const loaders = require('./src/loaders')
+const auth = require('./src/middlewares/auth.middleware')
 
 //import all routes
-const usersRoutes = require('./src/routes/usersRoutes')
-const practitiensRoutes = require('./src/routes/practitiensRoutes')
-const specialitiesRoutes = require('./src/routes/specialitiesRoutes')
+const usersRoutes = require('./src/routes/user.route')
+const practitiensRoutes = require('./src/routes/practitioner.route')
+const specialitiesRoutes = require('./src/routes/specialty.route')
 
 
 require("dotenv").config({
@@ -24,8 +25,8 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 server.use('/users', usersRoutes);
-server.use('/practitiens', practitiensRoutes);
-server.use('/specialites', specialitiesRoutes);
+server.use('/practitiens', auth, practitiensRoutes);
+server.use('/specialites', auth, specialitiesRoutes);
 
 // server.use('/users/addrole', require('./src/routes/droits/addRole'));
 // server.use('/users/getAllRoles', require('./src/routes/droits/getAllRoles'));

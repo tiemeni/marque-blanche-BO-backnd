@@ -1,4 +1,4 @@
-const Specialite = require('../models/specialite');
+const Specialite = require('../models/specialty.model');
 
 const handleNewSpecialite = async (req, res) => {
     const { nom } = req.body;
