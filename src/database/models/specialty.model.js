@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 
-const specialiteModel = mongoose.Schema({
-    nom: {
+const specialtyModel = mongoose.Schema({
+    title: {
         type: String,
-        required: [true, "veuillez entrer un nom"]
+        require
     },
-    practicien: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Practicien"
+    webAlert: {
+        type: String
+    },
+    secretaryAlert: {
+        type: String
     }
 });
 
-module.exports = mongoose.model('Specialite', specialiteModel);
+module.exports = mongoose.model('Specialty', specialtyModel);

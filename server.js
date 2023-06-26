@@ -12,7 +12,8 @@ const auth = require('./src/middlewares/auth.middleware')
 const usersRoutes = require('./src/routes/user.route')
 const practitiensRoutes = require('./src/routes/practitioner.route')
 const specialitiesRoutes = require('./src/routes/specialty.route')
-
+const rightsRoutes = require('./src/routes/right.route')
+const groupsRoutes = require('./src/routes/group.route')
 
 require("dotenv").config({
   path: path.join(__dirname, ".env"),
@@ -27,9 +28,8 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use('/users', usersRoutes);
 server.use('/practitiens', auth, practitiensRoutes);
 server.use('/specialites', auth, specialitiesRoutes);
-
-// server.use('/users/addrole', require('./src/routes/droits/addRole'));
-// server.use('/users/getAllRoles', require('./src/routes/droits/getAllRoles'));
+server.use('/droits', auth, rightsRoutes);
+server.use('/groupes', auth, groupsRoutes);
 
 const startServer = async () => {
   await loaders({ expressApp: server })
