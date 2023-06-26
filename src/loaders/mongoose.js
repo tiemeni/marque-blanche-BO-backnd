@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
+const {env} = require("../config/env/variables")
 
-module.exports = async () => {
-  const connection = await mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true });
-  return connection.connection.db;
-};
+// db connection
+const connectDB = () => {
+    return new Promise((a, r) => {
+        mongoose.connect(env.DATABASE_URI, {
+            useUnifiedTopology: true
+        })
+            .then((succ) => {
+                a(succ);
+            })
+            .catch(e => {
+                r(e);
+            })
+    })
+
+}
+module.exports = connectDB
