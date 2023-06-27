@@ -1,70 +1,63 @@
-const Specialite = require('../models/specialty.model');
+const { httpStatus } = require('../../commons/constants');
+const handler = require('../../commons/response.handler');
+const specialtyService = require('../../services/specialty.service');
 
-const handleNewSpecialite = async (req, res) => {
-    const { nom } = req.body;
-    if (!nom ) return res.status(400).json({ 'message': 'Entrez le nom de la spécialité.' });
-    // check for duplicate usernames in the db
-    const duplicate = await Specialite.findOne({ nom: nom }).exec();
-    if (duplicate) return res.status(409).json({ error: `${duplicate.nom} already exist` }); //Conflict
+const createSpecialty = async (req, res) => {
+    const data = req.body
     try {
-        //create and store the new Role
-        const result = await Specialite.create({
-            "nom": nom
+        const isSpecialtyExist = await specialtyService.findOneByQuery({ title: data.title })
+        if (isSpecialtyExist) return handler.errorHandler(res, "Specialty already exist", httpStatus.BAD_REQUEST)
+
+        const result = await specialtyService.createSpecialty({
+            "title": data.title,
+            "webAlert": data.webAlert,
+            "secretaryAlert": data.secretaryAlert
         });
-
-        console.log(result);
-
-        res.status(201).json({ 'success': `Specialite ${nom} crée!` });
-    } catch (err) {
-        res.status(500).json({ 'message': err.message });
-    } 
-}
-const getAllSpecialite = async (req, res) => {
-    try {
-        const foundSpecialite = await Specialite.find();
-        console.log("found specialite : " + foundSpecialite)
-        res.status(201).json(foundSpecialite);
+        return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (error) {
-        res.status(500).json({ 'message': error.message });
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
-const updateSpecialiteById = async (req, res) => {
+const getAllSpecialties = async (req, res) => {
     try {
-        const filter = {_id: req.params.specialiteid};
-        if (filter._id === undefined) res.status(404).json({ 'message': 'no param passed' });
-        const updateDoc = {
+        const result = await specialtyService.findSpecialties();
+        return handler.successHandler(res, result, httpStatus.ACCEPTED)
+    } catch (error) {
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+const getOneSpecialty = async (req, res) => {
+    try {
+        const result = await specialtyService.findSpecialtyById(req.params.id)
+        return handler.successHandler(res, result, httpStatus.ACCEPTED)
+    } catch (error) {
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+const updateSpecialtyById = async (req, res) => {
+    try {
+        const result = await specialtyService.updateSpecialty(req.params.id, {
             $set: {
-                nom: req.body.nom
+                ...req.body
             }
-        };
-        const result = await Specialite.updateOne(filter, updateDoc);
-        console.log(`${result.matchedCount} document matched`);
-        console.log(`${result.modifiedCount} documents updated`);
-        if (result.modifiedCount == 0){
-            res.status(404).json({'failure': `${result.modifiedCount} specialite updated/found`});
-        }else{
-            res.status(201).json({'success': `${result.modifiedCount} specialite updated`});
-        }
+        });
+        return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (error) {
-        res.status(500).json({ 'message': 'Server Error' })
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
-const deleteSpecialiteById = async (req, res) => {
+
+const deleteSpecialtyById = async (req, res) => {
     try {
-        const filter = {_id: req.params.specialiteid};
-        if (filter._id === undefined) res.status(404).json({ 'message': 'no param passed' });
-        const result = await Specialite.deleteOne(filter);
-        console.log(`${result.deletedCount} specialite was deleted`);
-        if(result.deletedCount == 0){
-            res.status(404).json({'failure': `${result.deletedCount} specialite deleted/found`});
-        }else{
-            res.status(201).json({'success': `${result.deletedCount} specialite deleted`});
-        }
+        const result = await specialtyService.deleteOne({ _id: req.params.id });
+        return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (error) {
         console.log(`Error when deleting ${error}`);
-        res.status(500).json({ 'message': 'Server Error' });
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
-module.exports = { handleNewSpecialite, getAllSpecialite, updateSpecialiteById, deleteSpecialiteById }
+module.exports = { createSpecialty, getAllSpecialties, updateSpecialtyById, deleteSpecialtyById, getOneSpecialty }

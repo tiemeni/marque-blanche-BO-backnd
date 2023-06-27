@@ -17,9 +17,15 @@ module.exports = {
         return await User.find(query).select('-password');
     },
     findUsers: async () => {
-        return await User.find({}.select('-password'));
+        return await User.find({}).select('-password');
     },
     updateUser: async (id, query) => {
         return await User.findOneAndUpdate({ _id: id }, query, { new: true });
+    },
+    deleteOne: async (query) => {
+        return await User.deleteOne(query);
+    },
+    deleteUsers: async () => {
+        return await User.deleteMany({});
     }
 }

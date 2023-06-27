@@ -1,36 +1,30 @@
 const mongoose = require('mongoose');
 
 const utilisateurModel = mongoose.Schema({
-    nom: {
+    civility: {
         type: String,
-        required: [true, "veuillez entrer votre nom"]
+        require
     },
-    prenom: {
-        type: String
+    name: {
+        type: String,
+        require
     },
-    dateNaiss: {
+    surname: {
+        type: String,
+        require
+    },
+    birthdate: {
         type: Date,
-        required: [true, "veuillez entrer votre date de naissance"]
-    },
-    sexe: {
-        type: String,
-        required: [true, "veuillez entrer votre sexe"]
     },
     telephone: {
         type: String,
-        required: [true, "veuillez entrer votre contact"]
-    },
-    ville: {
-        type: String,
-        required: [true, "veuillez entrer votre ville"]
     },
     email: {
         type: String,
-        required: [true, "veuillez entrer votre email"]
+        require
     },
     password: {
         type: String,
-        required: [true, "veuillez entrer votre un mot de passe"]
     },
     initiales: {
         type: String
@@ -39,15 +33,15 @@ const utilisateurModel = mongoose.Schema({
         contentType: String,
         data: Buffer
     },
-    actif: {
+    active: {
         type: Boolean,
-        required: [true, "veuillez entrer votre status"]
+        require
     },
-    droits: [
+    rights: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true, "veuillez choisir un droits"],
-            ref: 'Droits'
+            require,
+            ref: 'Rights'
         }
     ]
 });
