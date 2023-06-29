@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const groupModel = mongoose.Schema({
-    title: {
+    name: {
         type: String,
         require
+    },
+    description: {
+    type: String,
+    required: true
     },
     rights: [{
         type: mongoose.Types.ObjectId,

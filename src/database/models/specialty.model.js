@@ -1,12 +1,22 @@
 const mongoose = require('mongoose');
 
 const specialtyModel = mongoose.Schema({
-    title: {
+    label: {
         type: String,
         require
     },
-    webAlert: {
+    nom: {
         type: String
+    },
+    reference : {
+    	type: String
+    },
+    active: {
+    type: Boolean,
+    required: true
+    },
+    webAlert:{
+    type: String
     },
     secretaryAlert: {
         type: String
