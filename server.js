@@ -30,14 +30,14 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 server.use('/users', usersRoutes);
-server.use('/motif', auth, motifRoutes);
-server.use('/practitiens', auth, practitiensRoutes);
-server.use('/specialites', auth, specialitiesRoutes);
+server.use('/motif', motifRoutes);
+server.use('/practitiens', practitiensRoutes);
+server.use('/specialites', specialitiesRoutes);
 server.use('/patients', patientRoutes);
 server.use('/structure', structureRoute);
 server.use('/lieu', lieuRoutes);
-server.use('/droits', auth, rightsRoutes);
-server.use('/groupes', auth, groupsRoutes);
+server.use('/droits', rightsRoutes);
+server.use('/groupes', groupsRoutes);
 
 startServer({connectDB, server, startServer, PORT});
 
