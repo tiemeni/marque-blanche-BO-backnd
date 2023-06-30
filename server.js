@@ -29,7 +29,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
-server.use('/users', usersRoutes);
+server.use('/users', auth, usersRoutes);
 server.use('/motif', motifRoutes);
 server.use('/practitiens', practitiensRoutes);
 server.use('/specialites', specialitiesRoutes);
@@ -39,6 +39,6 @@ server.use('/lieu', lieuRoutes);
 server.use('/droits', rightsRoutes);
 server.use('/groupes', groupsRoutes);
 
-startServer({connectDB, server, startServer, PORT});
+startServer({ connectDB, server, startServer, PORT });
 
 module.exports = server;
