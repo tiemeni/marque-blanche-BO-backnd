@@ -41,7 +41,7 @@ server.use('/structure', structureRoute);
 server.use('/lieu', lieuRoutes);
 server.use('/droits', rightsRoutes);
 server.use('/groupes', groupsRoutes);
-server.get('/verifyToken', verifyToken);
+server.post('/verifyToken', verifyToken);
 
 startServer({ connectDB, server, startServer, PORT });
 
