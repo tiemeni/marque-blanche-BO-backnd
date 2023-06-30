@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const { httpStatus } = require("../commons/constants")
+const { httpStatus, COOKIE_NAME } = require("../commons/constants")
 const { env } = require("../config/env/variables")
 
 module.exports = async (req, res, next) => {
     let token;
-    if (req.headers.authorization) {
-        token = req.header("Authorization").replace("Bearer ", "");
+    if (req.cookies[COOKIE_NAME]) {
+        token = req.cookies[COOKIE_NAME]
     } else {
         res
             .status(httpStatus.UNAUTHORIZED)

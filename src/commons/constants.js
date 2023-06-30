@@ -14,4 +14,5 @@ module.exports = {
       UNKOWN_ERROR: 520, // generic response when server returns an unexpected result
       NOT_ACCEPTABLE: 406, // impossible to serve a response that meets the defined criteria
     },
+    COOKIE_NAME: "auth_cookies_name",
   };
