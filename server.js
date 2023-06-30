@@ -21,6 +21,7 @@ const groupsRoutes = require('./src/routes/group.route')
 
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
+const { verifyToken } = require("./src/routes/verifyToken/verifyToken");
 require("dotenv").config({
   path: path.join(__dirname, ".env"),
 });
@@ -40,6 +41,7 @@ server.use('/structure', structureRoute);
 server.use('/lieu', lieuRoutes);
 server.use('/droits', rightsRoutes);
 server.use('/groupes', groupsRoutes);
+server.get('/verifyToken', verifyToken);
 
 startServer({ connectDB, server, startServer, PORT });
 

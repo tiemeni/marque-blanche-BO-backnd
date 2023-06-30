@@ -18,6 +18,6 @@ module.exports = {
         });
     },
     verifyToken: async (token) => {
-        return await jwt.verify(token, proce);
+        return await jwt.verify(token, process.env.jwt || env.jwt);
     }
 }
