@@ -23,6 +23,7 @@ const createUser = async (req, res) => {
 
 const signIn = async (req, res) => {
     const { email, password } = req.body
+    console.log(req.body)
 
     try {
         const user = await userService.findOneByQuery({ email: email })

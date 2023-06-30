@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const PORT = process.env.PORT || 3500;
+const cors = require('cors')
 
 const auth = require('./src/middlewares/auth.middleware')
 
@@ -24,6 +25,7 @@ require("dotenv").config({
   path: path.join(__dirname, ".env"),
 });
 
+server.use(cors())
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
