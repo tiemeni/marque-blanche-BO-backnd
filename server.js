@@ -29,7 +29,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
-server.use('/users', auth, usersRoutes);
+server.use('/users', usersRoutes);
 server.use('/motif', motifRoutes);
 server.use('/practitiens', practitiensRoutes);
 server.use('/specialites', specialitiesRoutes);
