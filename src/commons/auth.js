@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {env} = require("../config/env/variables")
 
 module.exports = {
     encryptPassword: async (password) => {
@@ -11,7 +12,8 @@ module.exports = {
         return result;
     },
     generateToken: async (payload) => {
-        return await jwt.sign(payload, process.env.jwt, {
+        console.log()
+        return await jwt.sign(payload, process.env.jwt || env.jwt, {
             expiresIn: '1h'
         });
     },

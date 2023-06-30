@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { httpStatus } = require("../commons/constants")
-// const { env } = require("../config/env/variables")
+const { env } = require("../config/env/variables")
 
 module.exports = async (req, res, next) => {
     let token;
@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
             });
     }
     try {
-        const data = jwt.verify(token, process.env.jwt);
+        const data = jwt.verify(token, process.env.jwt || env.jwt);
         req.user = data.user;
         req.token = token;
         next();
