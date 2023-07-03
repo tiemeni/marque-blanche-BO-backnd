@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const utilisateurModel = mongoose.Schema({
     civility: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Civilities',
         require
     },
     name: {
@@ -37,12 +38,10 @@ const utilisateurModel = mongoose.Schema({
         type: Boolean,
         require
     },
-    rights: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            require,
-            ref: 'Rights'
-        }
-    ]
+    groups: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Groups',
+        require
+    }
 });
-module.exports = mongoose.model('Utilisateur', utilisateurModel);
+module.exports = mongoose.model('User', utilisateurModel);
