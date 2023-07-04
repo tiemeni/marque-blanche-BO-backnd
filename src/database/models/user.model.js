@@ -59,7 +59,8 @@ const utilisateurModel = mongoose.Schema({
         type: String
     },
     isPraticien: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);
