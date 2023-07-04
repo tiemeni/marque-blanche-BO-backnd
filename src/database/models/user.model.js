@@ -57,6 +57,9 @@ const utilisateurModel = mongoose.Schema({
     },
     motifFilter: {
         type: String
+    },
+    isPraticien: {
+        type: Boolean
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);
