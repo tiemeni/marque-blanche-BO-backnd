@@ -17,8 +17,7 @@ const createUser = async (req, res) => {
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
-        console.log(err)
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -42,7 +41,7 @@ const signIn = async (req, res) => {
             return handler.errorHandler(res, "Invalid password", httpStatus.NOT_ACCEPTABLE)
         }
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -52,7 +51,7 @@ const getUserById = async (req, res) => {
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundUser)
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -68,7 +67,7 @@ const getAllUsers = async (req, res) => {
         })
         return handler.successHandler(res, users)
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -77,7 +76,7 @@ const updateUserById = async (req, res) => {
         const result = await userService.updateUser(req.params.userid, { $set: { ...req.body } });
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -86,7 +85,7 @@ const deleteUserById = async (req, res) => {
         const result = await userService.deleteUsers({ _id: req.params.userid });
         return handler.successHandler(res, result)
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -95,7 +94,7 @@ const deleteAllUsers = async (req, res) => {
         const isDelete = await userService.deleteUsers();
         return handler.successHandler(res, isDelete)
     } catch (err) {
-        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
