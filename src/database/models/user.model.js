@@ -42,6 +42,21 @@ const utilisateurModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Groups',
         require
+    },
+    affectation: {
+        type: String
+    },
+    job: {
+        type: String
+    },
+    fonction: {
+        type: String
+    },
+    practitionerFilter: {
+        type: String
+    },
+    motifFilter: {
+        type: String
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);
