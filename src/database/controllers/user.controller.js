@@ -17,6 +17,7 @@ const createUser = async (req, res) => {
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
+        console.log(err)
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
