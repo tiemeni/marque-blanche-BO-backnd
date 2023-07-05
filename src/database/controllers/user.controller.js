@@ -58,14 +58,14 @@ const getUserById = async (req, res) => {
 const getAllUsers = async (req, res) => {
     try {
         const foundUsers = await userService.findUsers();
-        const users = foundUsers.map(user => {
-            return {
-                ...user._doc,
-                groups: user.groups._doc.title,
-                civility: user.civility.label,
-            }
-        })
-        return handler.successHandler(res, users)
+        // const users = foundUsers.map(user => {
+        //     return {
+        //         ...user._doc,
+        //         groups: user.groups._doc.title,
+        //         civility: user.civility.label,
+        //     }
+        // })
+        return handler.successHandler(res, foundUsers)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
