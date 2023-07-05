@@ -11,7 +11,7 @@ router.get('/:userid', auth, userController.getUserById);
 router.post('/register', userController.createUser);
 
 // PATCH
-router.patch('/:userid', auth, userController.updateUserById);
+router.patch('/:userid', userController.updateUserById);
 
 // DELETE
 router.delete('/', auth, userController.deleteAllUsers);
