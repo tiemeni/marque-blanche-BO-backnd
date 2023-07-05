@@ -14,7 +14,7 @@ router.post('/register', userController.createUser);
 router.patch('/:userid', userController.updateUserById);
 
 // DELETE
-router.delete('/', auth, userController.deleteAllUsers);
+router.delete('/', userController.deleteAllUsers);
 router.delete('/:userid', auth, userController.deleteUserById);
 
 module.exports = router;

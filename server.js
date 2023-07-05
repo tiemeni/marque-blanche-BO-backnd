@@ -28,8 +28,8 @@ require("dotenv").config({
 });
 
 server.use(cors({
-  origin: ["*"],
-  methods: ["*"],
+  origin: "*",
+  methods: "*",
   preflightContinue: true,
   allowedHeaders: true,
   credentials: true
