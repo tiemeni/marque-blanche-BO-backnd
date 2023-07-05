@@ -18,6 +18,7 @@ const patientRoutes = require('./src/routes/patients/patient.route')
 const specialitiesRoutes = require('./src/routes/specialty.route')
 const rightsRoutes = require('./src/routes/right.route')
 const groupsRoutes = require('./src/routes/group.route')
+const civilitiesRoutes = require('./src/routes/civility.route')
 
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
@@ -47,6 +48,7 @@ server.use('/structure', structureRoute);
 server.use('/lieu', lieuRoutes);
 server.use('/droits', rightsRoutes);
 server.use('/groupes', groupsRoutes);
+server.use('/civilites', civilitiesRoutes);
 server.post('/verifyToken', verifyToken);
 
 startServer({ connectDB, server, startServer, PORT });

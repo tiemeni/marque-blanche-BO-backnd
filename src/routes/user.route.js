@@ -3,7 +3,7 @@ const userController = require('../database/controllers/user.controller');
 const auth = require('../middlewares/auth.middleware')
 
 // GET
-router.get('/', auth, userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 router.post('/signin', userController.signIn);
 router.get('/:userid', auth, userController.getUserById);
 

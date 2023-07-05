@@ -17,7 +17,7 @@ module.exports = {
         return await User.find(query).select('-password');
     },
     findUsers: async () => {
-        return await User.find({}).select('-password');
+        return await User.find({}).select('-password').populate("civility").populate("groups");
     },
     updateUser: async (id, query) => {
         return await User.findOneAndUpdate({ _id: id }, query, { new: true });
