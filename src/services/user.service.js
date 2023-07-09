@@ -14,7 +14,7 @@ module.exports = {
         return await User.findById(id).select('-password');
     },
     findUserByQuery: async (query) => {
-        return await User.find(query).select('-password');
+        return await User.find(query).select('-password').populate("civility").populate("groups");
     },
     findUsers: async () => {
         return await User.find({}).select('-password').populate("civility").populate("groups");
