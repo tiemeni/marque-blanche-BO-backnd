@@ -5,7 +5,7 @@ const specialtyModel = mongoose.Schema({
         type: String,
         require
     },
-    nom: {
+    title: {
         type: String
     },
     reference : {
