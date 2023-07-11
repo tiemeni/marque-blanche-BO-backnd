@@ -57,6 +57,11 @@ const utilisateurModel = mongoose.Schema({
     },
     motifFilter: {
         type: String
+    },
+    idCentre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Centre',
+        require
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);

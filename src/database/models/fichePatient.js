@@ -43,6 +43,11 @@ const fichePatientModel = mongoose.Schema({
             require,
             ref: 'Rights'
         }
-    ]
+    ],
+    idCentre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Centre',
+        require
+    }
 });
 module.exports = mongoose.model('FichePatient', fichePatientModel);

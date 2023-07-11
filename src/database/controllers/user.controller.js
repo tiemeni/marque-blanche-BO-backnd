@@ -47,7 +47,7 @@ const signIn = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const foundUser = await userService.findOneByQuery({ _id: req.params.userid });
+        const foundUser = await userService.findOneByQuery({ _id: req.params.userid, idCentre: req.params.idCentre });
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundUser)
     } catch (err) {
@@ -57,7 +57,7 @@ const getUserById = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const foundUsers = await userService.findUsers();
+        const foundUsers = await userService.findUsers({ idCentre: req.params.idCenter });
         const users = foundUsers.map(user => {
             return {
                 ...user._doc,

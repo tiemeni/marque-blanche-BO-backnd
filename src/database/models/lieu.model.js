@@ -30,5 +30,10 @@ const lieuModel = mongoose.Schema({
         type: Boolean,
         require
     },
+    idCentre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Centre',
+        require
+    }
 });
 module.exports = mongoose.model('Lieu', lieuModel);

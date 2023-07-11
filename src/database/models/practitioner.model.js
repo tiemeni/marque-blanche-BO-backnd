@@ -23,7 +23,12 @@ const practicienModel = mongoose.Schema({
             required: [true, "veuillez choisir un droits"],
             ref: 'Specialite'
         }
-    ]
+    ], 
+    idCentre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Centre',
+        require
+    }
 });
 
 module.exports = mongoose.model('Practicien', practicienModel);
