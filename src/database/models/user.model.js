@@ -62,6 +62,10 @@ const utilisateurModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Centre',
         require
+    },
+    isPraticien: {
+        type: Boolean,
+        default: false
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);

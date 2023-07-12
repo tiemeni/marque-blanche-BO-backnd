@@ -8,11 +8,7 @@ const createSpecialty = async (req, res) => {
         const isSpecialtyExist = await specialtyService.findOneByQuery({ title: data.title })
         if (isSpecialtyExist) return handler.errorHandler(res, "Specialty already exist", httpStatus.BAD_REQUEST)
 
-        const result = await specialtyService.createSpecialty({
-            "title": data.title,
-            "webAlert": data.webAlert,
-            "secretaryAlert": data.secretaryAlert
-        });
+        const result = await specialtyService.createSpecialty(data);
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)

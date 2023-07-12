@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const patientController = require('../../database/controllers/patient.controller');
+const patientController = require('../database/controllers/patient.controller');
 
 router.post('/register', patientController.createPatient);
 router.delete('/:patientId', patientController.deletePatientById);

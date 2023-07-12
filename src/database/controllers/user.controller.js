@@ -1,4 +1,3 @@
-const User = require('../models/user.model');
 const handler = require('../../commons/response.handler')
 const { httpStatus } = require('../../commons/constants')
 const auth = require('../../commons/auth')
@@ -9,11 +8,17 @@ const createUser = async (req, res) => {
 
     try {
         // if user already exist
-        const isUserExist = await userService.findOneByQuery({ email: data.email })
+        const isUserExist = await userService.findOneByQuery({
+            email: data.email,
+            idCentre: req.idCentre,
+        })
         if (isUserExist) return handler.errorHandler(res, "User already exist", httpStatus.BAD_REQUEST)
 
         //create and store the new user
-        const result = await userService.createUser({ ...data });
+        const result = await userService.createUser({
+            ...data,
+            idCentre: req.idCentre,
+        });
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
@@ -23,10 +28,9 @@ const createUser = async (req, res) => {
 
 const signIn = async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body)
 
     try {
-        const user = await userService.findOneByQuery({ email: email })
+        const user = await userService.findOneByQuery({ email: email, idCentre: req.idCentre })
         if (!user) {
             return handler.errorHandler(res, "User doesn't exist in our system", httpStatus.NOT_FOUND)
         }
@@ -46,8 +50,13 @@ const signIn = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
+    console.log(req.idCentre)
     try {
-        const foundUser = await userService.findOneByQuery({ _id: req.params.userid, idCentre: req.params.idCentre });
+        const foundUser = await userService.findOneByQuery({
+            _id: req.params.userid,
+            idCentre: req.idCentre,
+            isPraticien: req.query.isPraticien ?? false
+        });
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundUser)
     } catch (err) {
@@ -56,16 +65,10 @@ const getUserById = async (req, res) => {
 }
 
 const getAllUsers = async (req, res) => {
+    let foundUsers;
     try {
-        const foundUsers = await userService.findUsers({ idCentre: req.params.idCenter });
-        const users = foundUsers.map(user => {
-            return {
-                ...user._doc,
-                groups: user.groups._doc.title,
-                civility: user.civility.label,
-            }
-        })
-        return handler.successHandler(res, users)
+        foundUsers = await userService.findUserByQuery({ isPraticien: req.query.isPraticien ?? false, idCentre: req.idCentre })
+        return handler.successHandler(res, foundUsers)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -73,7 +76,7 @@ const getAllUsers = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
-        const result = await userService.updateUser(req.params.userid, { $set: { ...req.body } });
+        const result = await userService.updateUser(req.params.userid, req.idCentre, { $set: { ...req.body } });
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -82,7 +85,7 @@ const updateUserById = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
     try {
-        const result = await userService.deleteUsers({ _id: req.params.userid });
+        const result = await userService.deleteOne({ _id: req.params.userid, idCentre: req.idCentre });
         return handler.successHandler(res, result)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)

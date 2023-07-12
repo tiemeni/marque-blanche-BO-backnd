@@ -14,13 +14,13 @@ module.exports = {
         return await User.findById(id).select('-password');
     },
     findUserByQuery: async (query) => {
-        return await User.find(query).select('-password');
-    },
-    findUsers: async (query) => {
         return await User.find(query).select('-password').populate("civility").populate("groups");
     },
-    updateUser: async (id, query) => {
-        return await User.findOneAndUpdate({ _id: id }, query, { new: true });
+    findUsers: async () => {
+        return await User.find().select('-password').populate("civility").populate("groups");
+    },
+    updateUser: async (id, idc, query) => {
+        return await User.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
     },
     deleteOne: async (query) => {
         return await User.deleteOne(query);
