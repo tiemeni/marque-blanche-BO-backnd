@@ -4,6 +4,7 @@ const { env } = require("../config/env/variables")
 
 module.exports = async (req, res, next) => {
     let token;
+    console.log(req.cookies)
     if (req.cookies[COOKIE_NAME]) {
         token = req.cookies[COOKIE_NAME]
     } else {

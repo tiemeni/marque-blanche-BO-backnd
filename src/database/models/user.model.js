@@ -44,7 +44,7 @@ const utilisateurModel = mongoose.Schema({
         require
     },
     affectation: {
-        type: String
+        type: [String]
     },
     job: {
         type: String

@@ -27,7 +27,10 @@ require("dotenv").config({
   path: path.join(__dirname, ".env"),
 });
 
-server.use(cors())
+server.use(cors({
+  credentials: true,
+  origin: "*"
+}))
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
