@@ -1,8 +1,5 @@
-const { COOKIE_NAME } = require("./constants");
-const {env} = require('../config/env/variables')
 
 exports.successHandler = (res, data, statusCode = 200) => {
-    data?.access_token && res.cookie(COOKIE_NAME, data.access_token, { maxAge: env.EXPIRE_DATE })
     res.status(statusCode).json({ success: true, data });
 }
 

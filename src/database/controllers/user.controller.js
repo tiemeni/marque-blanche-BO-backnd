@@ -1,7 +1,8 @@
 const handler = require('../../commons/response.handler')
-const { httpStatus } = require('../../commons/constants')
+const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
+const { env } = require('../../config/env/variables')
 
 const createUser = async (req, res) => {
     const data = req.body
@@ -37,6 +38,11 @@ const signIn = async (req, res) => {
 
         if (await auth.verifyPassword(password, user.password)) {
             const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
+            res.cookie(COOKIE_NAME, token, {
+                maxAge: env.EXPIRE_DATE,
+                sameSite: 'Lax',
+                
+            })
             return handler.successHandler(res, {
                 user,
                 access_token: token
@@ -50,7 +56,6 @@ const signIn = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
-    console.log(req.idCentre)
     try {
         const foundUser = await userService.findOneByQuery({
             _id: req.params.userid,
