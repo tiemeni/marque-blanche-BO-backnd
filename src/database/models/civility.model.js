@@ -5,6 +5,9 @@ const CivilityModel = mongoose.Schema({
         type: String,
         require
     },
+    abreviation: {
+        type: String,
+    }
 })
 
 module.exports = mongoose.model('Civilities', CivilityModel);

@@ -12,7 +12,7 @@ module.exports = {
         return await Group.findById(id).populate('rights');
     },
     updateGroup: async (id, idc, query) => {
-        return await Group.findOneAndUpdate({ _id: id, findGroupsByQuery }, query, { new: true });
+        return await Group.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
     },
     findGroups: async () => {
         return await Group.find({}).populate('rights');
