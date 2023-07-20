@@ -9,6 +9,7 @@ module.exports = {
         return await Civility.findOne(query);
     },
     findCivilities: async () => {
+        
         return await Civility.find({});
     },
 }
