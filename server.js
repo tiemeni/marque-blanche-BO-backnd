@@ -29,7 +29,7 @@ require("dotenv").config({
 
 server.use(cors({
   credentials: true,
-  origin: "*"
+  origin: "*",
 }))
 server.use(cookieParser());
 server.use(bodyParser.json());
@@ -47,6 +47,10 @@ server.use('/droits', rightsRoutes);
 server.use('/groupes', groupsRoutes);
 server.use('/civilites', civilitiesRoutes);
 server.post('/verifyToken', verifyToken);
+server.get('/getJWT', (req, res) => {
+  res.cookie('testJWT', "lskdlksldkslkdlskdlksldksldk", { maxAge: 1 * 24 * 60 * 60 * 1000 })
+  res.send('bonjour')
+})
 
 startServer({ connectDB, server, startServer, PORT });
 
