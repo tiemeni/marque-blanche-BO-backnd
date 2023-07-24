@@ -12,7 +12,11 @@ const makeAppointment = async (req, res) => {
     const data = req.body;
 
     try {
-        const isExist = await appointementService.findOneByQuery({ startTime: data.startTime });
+        const isExist = await appointementService.findOneByQuery({ 
+            startTime: data.startTime, 
+            practitioner: data.practitioner,
+            center: data.center
+        });
         if (isExist) return handler.errorHandler(res, 'Ce rendez-vous a déjà été pris', httpStatus.NOT_ACCEPTABLE)
 
         const result = await appointementService.createAppointment({
