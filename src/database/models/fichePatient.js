@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const fichePatientModel = mongoose.Schema({
     civility: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Civilities",
         require
     },
     name: {
@@ -22,9 +23,6 @@ const fichePatientModel = mongoose.Schema({
     email: {
         type: String,
         require
-    },
-    password: {
-        type: String,
     },
     initiales: {
         type: String

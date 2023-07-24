@@ -8,19 +8,20 @@ const specialtyModel = mongoose.Schema({
     title: {
         type: String
     },
-    reference : {
-    	type: String
+    reference: {
+        type: String
     },
-    active: {
-    type: Boolean,
-    required: true
-    },
-    webAlert:{
-    type: String
+    webAlert: {
+        type: String
     },
     secretaryAlert: {
         type: String
-    }
+    },
+    idCentre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Centre',
+        require
+    },
 });
 
 module.exports = mongoose.model('Specialty', specialtyModel);

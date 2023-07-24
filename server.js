@@ -44,7 +44,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use('/users', checkCentre, usersRoutes);
 server.use('/motif', motifRoutes);
 server.use('/practitiens', checkCentre, practitiensRoutes);
-server.use('/specialites', specialitiesRoutes);
+server.use('/specialites', checkCentre, specialitiesRoutes);
 server.use('/patients', checkCentre, patientRoutes);
 server.use('/structure', structureRoute);
 server.use('/lieu', checkCentre, lieuRoutes);

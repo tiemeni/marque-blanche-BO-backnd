@@ -7,11 +7,11 @@ const createPatient = async (req, res) => {
     const data = req.body
     try {
         // if user patient exists
-        const isPatientExist = await patientService.findOneByQuery({ email: data.email })
+        const isPatientExist = await patientService.findOneByQuery({ email: data.email, idCentre: req.idCentre })
         if (isPatientExist) return handler.errorHandler(res, "Patient already exists", httpStatus.BAD_REQUEST)
 
         //create and store the new patient
-        const result = await patientService.createPatient({ ...data });
+        const result = await patientService.createPatient({ ...data, idCentre: req.idCentre });
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -20,7 +20,7 @@ const createPatient = async (req, res) => {
 
 const deletePatientById = async (req, res) => {
     try {
-        const result = await patientService.deleteOne({ _id: req.params.patientId });
+        const result = await patientService.deleteOne({ _id: req.params.patientId, idCentre: req.idCentre });
         return handler.successHandler(res, result)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -29,7 +29,7 @@ const deletePatientById = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
     try {
-        const foundPatients = await patientService.findPatients();
+        const foundPatients = await patientService.findPatients(req.idCentre);
         return handler.successHandler(res, foundPatients)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -38,7 +38,7 @@ const getAllPatients = async (req, res) => {
 
 const getPatientById = async (req, res) => {
     try {
-        const foundPatient = await patientService.findOneByQuery({ _id: req.params.patientId });
+        const foundPatient = await patientService.findOneByQuery({ _id: req.params.patientId, idCentre: req.idCentre });
         if (foundPatient == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundPatient)
     } catch (err) {
@@ -48,7 +48,7 @@ const getPatientById = async (req, res) => {
 
 const updatePatient = async (req, res) => {
     try {
-        const result = await patientService.updatePatient(req.params.patientId, { $set: { ...req.body } });
+        const result = await patientService.updatePatient(req.params.patientId, req.idCentre, { $set: { ...req.body } });
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
