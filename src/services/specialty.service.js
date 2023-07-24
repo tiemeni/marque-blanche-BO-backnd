@@ -14,11 +14,11 @@ module.exports = {
     findSpecialtyByQuery: async (query) => {
         return await Specialty.find(query);
     },
-    findSpecialties: async () => {
-        return await Specialty.find({});
+    findSpecialties: async (idc) => {
+        return await Specialty.find({ idCentre: idc });
     },
-    updateSpecialty: async (id, query) => {
-        return await Specialty.findOneAndUpdate({ _id: id }, query, { new: true });
+    updateSpecialty: async (id, idc, query) => {
+        return await Specialty.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
     },
     deleteOne: async (query) => {
         return await Specialty.deleteOne(query);

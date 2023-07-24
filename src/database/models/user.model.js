@@ -66,6 +66,15 @@ const utilisateurModel = mongoose.Schema({
     isPraticien: {
         type: Boolean,
         default: false
+    },
+    timeSlot: {
+        type: Number
+    },
+    startTime: {
+        type: String,
+    },
+    endTime: {
+        type: String
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);

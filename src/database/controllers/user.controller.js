@@ -37,6 +37,7 @@ const signIn = async (req, res) => {
         }
 
         if (await auth.verifyPassword(password, user.password)) {
+            console.log(user._id)
             const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
             res.cookie(COOKIE_NAME, token, {
                 maxAge: env.EXPIRE_DATE,
