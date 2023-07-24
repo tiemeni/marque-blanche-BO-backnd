@@ -54,6 +54,9 @@ server.use('/civilites', civilitiesRoutes);
 server.use('/appointments', checkCentre, appointmentRoutes);
 
 server.post('/verifyToken', verifyToken);
+server.post('/checkVersion', (req, res) => {
+  res.send("version backoffice gatewayDoc 24-07 midi")
+});
 
 startServer({ connectDB, server, startServer, PORT });
 
