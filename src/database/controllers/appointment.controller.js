@@ -12,8 +12,8 @@ const makeAppointment = async (req, res) => {
     const data = req.body;
 
     try {
-        const isExist = await appointementService.findOneByQuery({ 
-            startTime: data.startTime, 
+        const isExist = await appointementService.findOneByQuery({
+            startTime: data.startTime,
             practitioner: data.practitioner,
             center: data.center
         });
@@ -30,10 +30,19 @@ const makeAppointment = async (req, res) => {
     }
 }
 
+/**
+ * Récuperer les rendez-vous des praticiens par filtre s'ils sont définis
+ * @param idCentre
+ * @param practitioner 
+ * @param patient 
+ * @param idRdv 
+ * @returns tableau de rendex-vous
+ */
 const getAppointments = async (req, res) => {
     let query = { center: req.idCentre }
     if (req.query.practitioner) query = { ...query, practitioner: req.query.practitioner }
     if (req.query.patient) query = { ...query, practitioner: req.query.practitioner }
+    if (req.query.idRdv) query = { ...query, _id: req.query.idRdv }
 
     // Si des filtres sont definis
     if (req.query.idp) query['practitioner'] = req.query.idp
@@ -41,17 +50,21 @@ const getAppointments = async (req, res) => {
 
     try {
         const appointments = await appointementService.findByQuery(query)
+        console.log(appointments)
         let result = []
 
         for (const appointment of appointments) {
             const { practitioner } = appointment
             const { civility } = practitioner
             result.push({
+                _id: appointment._id,
                 civility: civility?.abreviation || civility.label,
                 name: practitioner.name,
                 surname: practitioner.surname,
-                startTime: appointment.startTime,
-                endTime: appointment.endTime,
+                patient: appointment.patient,
+                motif: appointment.motif.label,
+                timeStart: appointment.startTime,
+                timeEnd: appointment.endTime,
                 date: appointment.date,
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,

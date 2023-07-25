@@ -26,7 +26,14 @@ module.exports = {
             .find(query)
             .select("-patient")
             .select("-center")
-            .select("-motif")
+            .populate({
+                path: "motif",
+                select: "-active"
+            })
+            .populate({
+                path: "patient",
+                select: "-rights -active -password -civility"
+            })
             .populate({
                 path: "practitioner",
                 populate: {
