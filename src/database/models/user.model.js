@@ -47,7 +47,9 @@ const utilisateurModel = mongoose.Schema({
         type: String
     },
     job: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Specialty",
+        require
     },
     fonction: {
         type: String

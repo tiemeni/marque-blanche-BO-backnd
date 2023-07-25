@@ -42,7 +42,7 @@ const signIn = async (req, res) => {
             res.cookie(COOKIE_NAME, token, {
                 maxAge: env.EXPIRE_DATE,
                 sameSite: 'Lax',
-                
+
             })
             return handler.successHandler(res, {
                 user,
@@ -67,6 +67,21 @@ const getUserById = async (req, res) => {
         return handler.successHandler(res, foundUser)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+const getUsersGroupByJob = async (req, res) => {
+    try {
+        if (!req.query.isPraticien) return handler.errorHandler(res, "Les utilisateurs ne peuvent être groupé par spécialités.", httpStatus.BAD_REQUEST)
+
+        const users = await userService.findAndGroupByJob({
+            idCentre: req.idCentre,
+            isPraticien: req.query.isPraticien
+        })
+
+        return handler.successHandler(res, users)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
@@ -107,4 +122,4 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers };
+module.exports = { createUser, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };

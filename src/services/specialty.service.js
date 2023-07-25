@@ -25,5 +25,5 @@ module.exports = {
     },
     deleteSpecialtys: async () => {
         return await Specialty.deleteMany({});
-    }
+    },
 }

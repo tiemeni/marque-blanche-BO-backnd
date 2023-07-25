@@ -27,7 +27,9 @@ const makeAppointment = async (req, res) => {
 }
 
 const getAppointments = async (req, res) => {
-    const query = { center: req.idCentre }
+    let query = { center: req.idCentre }
+    if (req.query.practitioner) query = { ...query, practitioner: req.query.practitioner }
+    if (req.query.patient) query = { ...query, practitioner: req.query.practitioner }
 
     // Si des filtres sont definis
     if (req.query.idp) query['practitioner'] = req.query.idp
@@ -60,6 +62,7 @@ const getAppointments = async (req, res) => {
         return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
+
 
 /**
  * Pre-enregistrer un rendez-vous
