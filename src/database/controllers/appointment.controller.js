@@ -68,7 +68,8 @@ const getAppointments = async (req, res) => {
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,
                 provenance: appointment.provenance,
-                wasMoved: appointment.wasMoved
+                wasMoved: appointment.wasMoved,
+                resourceId: practitioner._id
             })
         }
 
