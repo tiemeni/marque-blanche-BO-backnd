@@ -40,17 +40,16 @@ const makeAppointment = async (req, res) => {
  */
 const getAppointments = async (req, res) => {
     let query = { center: req.idCentre }
-    if (req.query.practitioner) query = { ...query, practitioner: req.query.practitioner }
-    if (req.query.patient) query = { ...query, practitioner: req.query.practitioner }
-    if (req.query.idRdv) query = { ...query, _id: req.query.idRdv }
+
+    console.log("query", req.query)
 
     // Si des filtres sont definis
-    if (req.query.idp) query['practitioner'] = req.query.idp
+    if (req.query.idp) query['practitioner'] = { $in: req.query.idp.split(",") }
     if (req.query.idpatient) query['patient'] = req.query.idpatient
+    if (req.query.idRdv) query["_id"] = req.query.idRdv
 
     try {
         const appointments = await appointementService.findByQuery(query)
-        console.log(appointments)
         let result = []
 
         for (const appointment of appointments) {
