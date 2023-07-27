@@ -1,5 +1,4 @@
 const Lieu = require('../database/models/lieu.model');
-const { encryptPassword } = require('../commons/auth');
 
 module.exports = {
     createLieu: async (lieu) => {
@@ -15,11 +14,11 @@ module.exports = {
     findLieuByQuery: async (query) => {
         return await Lieu.find(query);
     },
-    findLieus: async () => {
-        return await Lieu.find({});
+    findLieus: async (idc) => {
+        return await Lieu.find({ idCentre: idc });
     },
-    updateLieu: async (id, query) => {
-        return await Lieu.findOneAndUpdate({ _id: id }, query, { new: true });
+    updateLieu: async (id, idc, query) => {
+        return await Lieu.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
     },
     deleteOne: async (query) => {
         return await Lieu.deleteOne(query);

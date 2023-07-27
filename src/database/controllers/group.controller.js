@@ -5,10 +5,10 @@ const groupService = require('../../services/group.service');
 const createGroup = async (req, res) => {
     const data = req.body;
     try {
-        const isGroupExist = await groupService.findOneByQuery({ title: data.title })
+        const isGroupExist = await groupService.findOneByQuery({ title: data.title, idCentre: req.idCentre })
         if (isGroupExist) return handler.errorHandler(res, "Group already exist", httpStatus.BAD_REQUEST)
 
-        const result = await groupService.createGroup(data)
+        const result = await groupService.createGroup({ ...data, idCentre: req.idCentre })
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
@@ -17,7 +17,7 @@ const createGroup = async (req, res) => {
 
 const getAllGroup = async (req, res) => {
     try {
-        const result = await groupService.findGroups()
+        const result = await groupService.findGroupsByQuery({ idCentre: req.idCentre })
         return handler.successHandler(res, result, httpStatus.ACCEPTED)
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
@@ -35,7 +35,7 @@ const getGroupById = async (req, res) => {
 
 const updateGroup = async (req, res) => {
     try {
-        const result = await groupService.updateGroup(req.params.id, {
+        const result = await groupService.updateGroup(req.params.id, req.idCentre, {
             $set: {
                 ...req.body
             }

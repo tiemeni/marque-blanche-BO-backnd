@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const motifModel = mongoose.Schema({
-	label: {
+    label: {
         type: String,
         required: true
     },
@@ -16,12 +16,12 @@ const motifModel = mongoose.Schema({
         type: String,
         required: true
     },
-    reference : {
-    type: String,
+    reference: {
+        type: String,
     },
-    active : {
-    type: Boolean,
-    required: true
+    active: {
+        type: Boolean,
+        required: true
     }
 });
 module.exports = mongoose.model('Motif', motifModel);

@@ -1,19 +1,25 @@
-const User = require('../models/user.model');
 const handler = require('../../commons/response.handler')
-const { httpStatus } = require('../../commons/constants')
+const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
+const { env } = require('../../config/env/variables')
 
 const createUser = async (req, res) => {
     const data = req.body
 
     try {
         // if user already exist
-        const isUserExist = await userService.findOneByQuery({ email: data.email })
+        const isUserExist = await userService.findOneByQuery({
+            email: data.email,
+            idCentre: req.idCentre,
+        })
         if (isUserExist) return handler.errorHandler(res, "User already exist", httpStatus.BAD_REQUEST)
 
         //create and store the new user
-        const result = await userService.createUser({ ...data });
+        const result = await userService.createUser({
+            ...data,
+            idCentre: req.idCentre,
+        });
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
@@ -23,16 +29,21 @@ const createUser = async (req, res) => {
 
 const signIn = async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body)
 
     try {
-        const user = await userService.findOneByQuery({ email: email })
+        const user = await userService.findOneByQuery({ email: email, idCentre: req.idCentre })
         if (!user) {
             return handler.errorHandler(res, "User doesn't exist in our system", httpStatus.NOT_FOUND)
         }
 
         if (await auth.verifyPassword(password, user.password)) {
+            console.log(user._id)
             const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
+            res.cookie(COOKIE_NAME, token, {
+                maxAge: env.EXPIRE_DATE,
+                sameSite: 'Lax',
+
+            })
             return handler.successHandler(res, {
                 user,
                 access_token: token
@@ -47,7 +58,11 @@ const signIn = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const foundUser = await userService.findOneByQuery({ _id: req.params.userid, idCentre: req.params.idCentre });
+        const foundUser = await userService.findOneByQuery({
+            _id: req.params.userid,
+            idCentre: req.idCentre,
+            isPraticien: req.query.isPraticien ?? false
+        });
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundUser)
     } catch (err) {
@@ -55,17 +70,26 @@ const getUserById = async (req, res) => {
     }
 }
 
-const getAllUsers = async (req, res) => {
+const getUsersGroupByJob = async (req, res) => {
     try {
-        const foundUsers = await userService.findUsers({ idCentre: req.params.idCenter });
-        const users = foundUsers.map(user => {
-            return {
-                ...user._doc,
-                groups: user.groups._doc.title,
-                civility: user.civility.label,
-            }
+        if (!req.query.isPraticien) return handler.errorHandler(res, "Les utilisateurs ne peuvent être groupé par spécialités.", httpStatus.BAD_REQUEST)
+
+        const users = await userService.findAndGroupByJob({
+            idCentre: req.idCentre,
+            isPraticien: req.query.isPraticien
         })
+
         return handler.successHandler(res, users)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+const getAllUsers = async (req, res) => {
+    let foundUsers;
+    try {
+        foundUsers = await userService.findUserByQuery({ isPraticien: req.query.isPraticien ?? false, idCentre: req.idCentre })
+        return handler.successHandler(res, foundUsers)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -73,7 +97,7 @@ const getAllUsers = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
-        const result = await userService.updateUser(req.params.userid, { $set: { ...req.body } });
+        const result = await userService.updateUser(req.params.userid, req.idCentre, { $set: { ...req.body } });
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -82,7 +106,7 @@ const updateUserById = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
     try {
-        const result = await userService.deleteUsers({ _id: req.params.userid });
+        const result = await userService.deleteOne({ _id: req.params.userid, idCentre: req.idCentre });
         return handler.successHandler(res, result)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -98,4 +122,4 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers };
+module.exports = { createUser, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };

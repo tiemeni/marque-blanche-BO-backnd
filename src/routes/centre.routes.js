@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const centreController = require('../../database/controllers/structure.controller');
+const centreController = require('../database/controllers/structure.controller');
 
 router.post('/register', centreController.createStructure);
 router.delete('/:centreId', centreController.deleteStructureById);

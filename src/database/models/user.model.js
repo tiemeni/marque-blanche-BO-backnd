@@ -47,7 +47,9 @@ const utilisateurModel = mongoose.Schema({
         type: [String]
     },
     job: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Specialty",
+        require
     },
     fonction: {
         type: String
@@ -62,6 +64,19 @@ const utilisateurModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Centre',
         require
+    },
+    isPraticien: {
+        type: Boolean,
+        default: false
+    },
+    timeSlot: {
+        type: Number
+    },
+    startTime: {
+        type: String,
+    },
+    endTime: {
+        type: String
     }
 });
 module.exports = mongoose.model('User', utilisateurModel);

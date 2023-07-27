@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const groupModel = mongoose.Schema({
-    name: {
+    title: {
         type: String,
         require
     },

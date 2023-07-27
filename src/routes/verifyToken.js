@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken")
-const { successHandler, errorHandler } = require("../../commons/response.handler")
-const { env } = require("../../config/env/variables")
+const { successHandler, errorHandler } = require("../commons/response.handler")
+const { env } = require("../config/env/variables")
 
 module.exports.verifyToken = async (req, res) => {
     try {

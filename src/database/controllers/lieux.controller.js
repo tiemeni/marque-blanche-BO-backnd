@@ -7,11 +7,11 @@ const createLieu = async (req, res) => {
     const data = req.body
     try {
         // if lieu already exists
-        const isLieuExist = await lieuService.findOneByQuery({ reference: data.reference })
+        const isLieuExist = await lieuService.findOneByQuery({ reference: data.reference, idCentre: req.idCentre })
         if (isLieuExist) return handler.errorHandler(res, "lieu already exist", httpStatus.BAD_REQUEST)
 
         //create and store the new lieu
-        const result = await lieuService.createLieu({ ...data });
+        const result = await lieuService.createLieu({ ...data, idCentre: req.idCentre });
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
@@ -22,7 +22,7 @@ const createLieu = async (req, res) => {
 
 const deleteLieuById = async (req, res) => {
     try {
-        const result = await lieuService.deleteOne({ _id: req.params.lieuId });
+        const result = await lieuService.deleteOne({ _id: req.params.lieuId, idCentre: req.idCentre });
         return handler.successHandler(res, result)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -32,7 +32,7 @@ const deleteLieuById = async (req, res) => {
 
 const getAllLieux = async (req, res) => {
     try {
-        const foundLieux = await lieuService.findLieus();
+        const foundLieux = await lieuService.findLieus(req.idCentre);
         return handler.successHandler(res, foundLieux)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -41,7 +41,7 @@ const getAllLieux = async (req, res) => {
 
 const getLieuById = async (req, res) => {
     try {
-        const foundLieu = await lieuService.findOneByQuery({ _id: req.params.lieuId });
+        const foundLieu = await lieuService.findOneByQuery({ _id: req.params.lieuId, idCentre: req.idCentre });
         if (foundLieu == null) return handler.errorHandler(res, 'No lieu founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundLieu)
     } catch (err) {
@@ -51,7 +51,7 @@ const getLieuById = async (req, res) => {
 
 const updateLieuById = async (req, res) => {
     try {
-        const result = await lieuService.updateLieu(req.params.lieuId, { $set: { ...req.body } });
+        const result = await lieuService.updateLieu(req.params.lieuId, req.idCentre, { $set: { ...req.body } });
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
