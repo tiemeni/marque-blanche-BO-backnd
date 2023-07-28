@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { CIVILITY } = require('../../constants/entity');
 
 const CivilityModel = mongoose.Schema({
     label: {
@@ -10,4 +11,4 @@ const CivilityModel = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Civilities', CivilityModel);
+module.exports = mongoose.model(CIVILITY, CivilityModel);

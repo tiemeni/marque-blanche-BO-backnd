@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
+const { GROUP, CENTRE, RIGHT } = require('../../constants/entity');
 
 const groupModel = mongoose.Schema({
     title: {
         type: String,
-        require
+        required: true
     },
     description: {
-    type: String,
-    required: true
+        type: String,
+        required: true
     },
     rights: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Rights',
+        ref: RIGHT,
     }],
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre',
-        require
+        ref: CENTRE,
+        required: true
     }
 })
 
-module.exports = mongoose.model('Groups', groupModel);
+module.exports = mongoose.model(GROUP, groupModel);

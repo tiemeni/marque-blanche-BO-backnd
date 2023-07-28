@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { MOTIF, PRATICIEN, CENTRE, USER, RDV } = require('../../constants/entity');
 
 const rdvModel = mongoose.Schema({
     date: {
@@ -7,23 +8,23 @@ const rdvModel = mongoose.Schema({
     },
     idUtilisateur: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Utilisateur'
+        ref: USER
     },
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre'
+        ref: CENTRE
     },
     idPracticien: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Practicien'
+        ref: PRATICIEN
     },
     idMotif: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Motif'
+        ref: MOTIF
     },
     creneau: {
         type: String,
         required: true
     }
 });
-module.exports = mongoose.model('RDV', rdvModel);
+module.exports = mongoose.model(RDV, rdvModel);

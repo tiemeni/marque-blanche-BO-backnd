@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PRATICIEN, CENTRE } = require('../../constants/entity');
 
 const centreModel = mongoose.Schema({
     nom: {
@@ -31,9 +32,9 @@ const centreModel = mongoose.Schema({
     },
     idPracticien: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Practicien'
+        ref: PRATICIEN
     },
     urlSite: String,
     formeJuridque: String
 });
-module.exports = mongoose.model('Centre', centreModel);
+module.exports = mongoose.model(CENTRE, centreModel);

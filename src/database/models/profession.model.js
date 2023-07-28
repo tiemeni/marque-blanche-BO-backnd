@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PROFESSION } = require('../../constants/entity');
 
 const professionModel = mongoose.Schema({
     name: {
@@ -7,4 +8,4 @@ const professionModel = mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('Profession', professionModel);
+module.exports = mongoose.model(PROFESSION, professionModel);

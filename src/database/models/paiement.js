@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PAIEMENT, CENTRE, USER } = require('../../constants/entity');
 
 const paiementModel = mongoose.Schema({
     moyen: {
@@ -7,11 +8,11 @@ const paiementModel = mongoose.Schema({
     },
     idUtilisateur: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Utilisateur'
+        ref: USER
     },
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre'
+        ref: CENTRE
     }
 });
-module.exports = mongoose.model('Paiement', paiementModel);
+module.exports = mongoose.model(PAIEMENT, paiementModel);

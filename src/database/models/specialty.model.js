@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const { CENTRE, PROFESSION, SPECIALITY } = require('../../constants/entity');
+const { ID_PROFESSION_SPECIALISTE } = require('../../constants/id.profession');
 
 const specialtyModel = mongoose.Schema({
     label: {
         type: String,
-        require
+        required: true
     },
     title: {
         type: String
@@ -19,9 +21,14 @@ const specialtyModel = mongoose.Schema({
     },
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre',
-        require
+        ref: CENTRE,
+        required: true
+    },
+    idProfession: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: PROFESSION,
+        default: ID_PROFESSION_SPECIALISTE
     },
 });
 
-module.exports = mongoose.model('Specialty', specialtyModel);
+module.exports = mongoose.model(SPECIALITY, specialtyModel);

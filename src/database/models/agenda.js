@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const { AGENDA, PRATICIEN } = require('../../constants/entity');
 
 const agendaModel = mongoose.Schema({
     idPracticien: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Practicien'
+        ref: PRATICIEN
     },
     dateDebutActivites: {
         type: Date,
@@ -14,4 +15,4 @@ const agendaModel = mongoose.Schema({
         required: true
     }
 });
-module.exports = mongoose.model('Agenda', agendaModel);
+module.exports = mongoose.model(AGENDA, agendaModel);

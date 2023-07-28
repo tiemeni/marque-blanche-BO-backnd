@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { PROFESSION, MOTIF } = require('../../constants/entity');
 
 const motifModel = mongoose.Schema({
     label: {
@@ -22,6 +23,11 @@ const motifModel = mongoose.Schema({
     active: {
         type: Boolean,
         required: true
+    },
+    idProfession: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: PROFESSION
     }
 });
-module.exports = mongoose.model('Motif', motifModel);
+module.exports = mongoose.model(MOTIF, motifModel);
