@@ -12,6 +12,9 @@ module.exports = {
     findMotifs: async () => {
         return await Motif.find({});
     },
+    findMotifsByQuery: async query => {
+        return await Motif.find(query)
+    },
     findOneByQuery: async (query) => {
         return await Motif.findOne(query);
     },
