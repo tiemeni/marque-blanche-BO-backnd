@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { USER, CENTRE, SPECIALITY, GROUP, CIVILITY } = require('../../constants/entity');
+const { USER, CENTRE, SPECIALITY, GROUP, CIVILITY, LIEU } = require('../../constants/entity');
 
 const utilisateurModel = mongoose.Schema({
     civility: {
@@ -45,7 +45,9 @@ const utilisateurModel = mongoose.Schema({
         required: true
     },
     affectation: {
-        type: [String]
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: LIEU,
+        required: true
     },
     job: {
         type: mongoose.Schema.Types.ObjectId,

@@ -30,6 +30,9 @@ module.exports = {
     updateUser: async (id, idc, query) => {
         return await User.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
     },
+    findUserByQuery: async (query) => {
+        return await User.find(query);
+    },
     findAndGroupByJob: async (query) => {
         const users = await findUserByQuery(query);
 
@@ -49,5 +52,4 @@ module.exports = {
     deleteUsers: async () => {
         return await User.deleteMany();
     },
-    findUserByQuery
 }

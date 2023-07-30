@@ -32,7 +32,7 @@ const deleteMotifById = async (req, res) => {
 
 const getAllMotifs = async (req, res) => {
     try {
-        const foundMotifs = await motifService.findMotifs();
+        const foundMotifs = await motifService.findMotifs({ idCentre: req.query.idCentre });
         return handler.successHandler(res, foundMotifs)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -51,7 +51,7 @@ const getMotifById = async (req, res) => {
 
 const getMotifByIdProfession = async (req, res) => {
     try {
-        const foundMotif = await motifService.findMotifsByQuery({ idProfession: req.params.idProfession });
+        const foundMotif = await motifService.findMotifsByQuery({ idProfession: req.params.idProfession, idCentre: req.query.idCentre });
         if (foundMotif == null) return handler.errorHandler(res, 'No motif found', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundMotif)
     } catch (err) {
@@ -61,7 +61,7 @@ const getMotifByIdProfession = async (req, res) => {
 
 const getLieuxByIdMotif = async (req, res) => {
     try {
-        const foundMotif = await motifService.findMotifsByQuery({ _id: req.params.idMotif });
+        const foundMotif = await motifService.findMotifsByQuery({ _id: req.params.idMotif, idCentre: req.query.idCentre });
         if (foundMotif == null) return handler.errorHandler(res, 'No Lieu found', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundMotif[0]?.idLieux)
     } catch (err) {

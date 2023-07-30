@@ -3,6 +3,7 @@ const utilisateur = require('../models/user.model');
 
 const handleNewPracticien = async (req, res) => {
     const { matricule, status, prixDefault, idUtilisateur, idSpecialite } = req.body;
+    console.log(matricule)
     // if (!nom ) return res.status(400).json({ 'message': 'Entrez le nom de la spécialité.' });
     // check for duplicate matricule in the db
     const duplicate = await Practicien.findOne({ matricule: matricule }).exec();

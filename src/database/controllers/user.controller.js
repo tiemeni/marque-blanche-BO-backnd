@@ -70,6 +70,25 @@ const getUserById = async (req, res) => {
     }
 }
 
+const getPraticienByIdLieu = async (req, res) => {
+    let concernedPraticens = []
+    try {
+        const foundUser = await userService.findUserByQuery({
+            idCentre: req.query.idCentre,
+            isPraticien: true
+        });
+        if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
+        req.query.idLieu && foundUser?.map((e, _i) => {
+            if (e.affectation.indexOf(req.query.idLieu) != -1) {
+                concernedPraticens.push(e)
+            }
+        })
+        return handler.successHandler(res, concernedPraticens)
+    } catch (err) {
+        return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 const getUsersGroupByJob = async (req, res) => {
     try {
         if (!req.query.isPraticien) return handler.errorHandler(res, "Les utilisateurs ne peuvent être groupé par spécialités.", httpStatus.BAD_REQUEST)
@@ -106,7 +125,7 @@ const updateUserById = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
     try {
-        const result = await userService.deleteOne({ _id: req.params.userid, idCentre: req.idCentre });
+        const result = await userService.deleteOne({ _id: req.params.userid });
         return handler.successHandler(res, result)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -122,4 +141,4 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };
