@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { PROFESSION, MOTIF } = require('../../constants/entity');
+const { PROFESSION, MOTIF, LIEU } = require('../../constants/entity');
 
 const motifModel = mongoose.Schema({
     label: {
@@ -28,6 +28,11 @@ const motifModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: PROFESSION
+    },
+    idLieux: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: LIEU,
+        required: true
     }
 });
 module.exports = mongoose.model(MOTIF, motifModel);
