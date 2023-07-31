@@ -79,7 +79,7 @@ const getPraticienByIdLieu = async (req, res) => {
         });
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         req.query.idLieu && foundUser?.map((e, _i) => {
-            if (e.affectation.indexOf(req.query.idLieu) != -1) {
+            if ((e.affectation.indexOf(req.query.idLieu) != -1) && (e.job == req.query.idSpeciality)) {
                 concernedPraticens.push(e)
             }
         })

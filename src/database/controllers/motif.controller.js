@@ -59,6 +59,16 @@ const getMotifByIdProfession = async (req, res) => {
     }
 }
 
+const getMotifByIdSpeciality = async (req, res) => {
+    try {
+        const foundMotif = await motifService.findMotifsByQuery({ idSpeciality: req.params.idSpeciality, idCentre: req.query.idCentre });
+        if (foundMotif == null) return handler.errorHandler(res, 'No motif found', httpStatus.NOT_FOUND);
+        return handler.successHandler(res, foundMotif)
+    } catch (err) {
+        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 const getLieuxByIdMotif = async (req, res) => {
     try {
         const foundMotif = await motifService.findMotifsByQuery({ _id: req.params.idMotif, idCentre: req.query.idCentre });
@@ -80,4 +90,4 @@ const updateMotifById = async (req, res) => {
 
 
 
-module.exports = { createMotif, deleteMotifById, getAllMotifs, getMotifById, updateMotifById, getMotifByIdProfession, getLieuxByIdMotif }
+module.exports = { getMotifByIdSpeciality, createMotif, deleteMotifById, getAllMotifs, getMotifById, updateMotifById, getMotifByIdProfession, getLieuxByIdMotif }

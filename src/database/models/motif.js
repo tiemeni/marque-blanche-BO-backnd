@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { PROFESSION, MOTIF, LIEU } = require('../../constants/entity');
+const { PROFESSION, MOTIF, LIEU, SPECIALITY } = require('../../constants/entity');
 
 const motifModel = mongoose.Schema({
     label: {
@@ -32,6 +32,11 @@ const motifModel = mongoose.Schema({
     idLieux: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: LIEU,
+        required: true
+    },
+    idSpeciality: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: SPECIALITY,
         required: true
     }
 });
