@@ -35,7 +35,6 @@ module.exports = {
     },
     findAndGroupByJob: async (query) => {
         const users = await findUserByQuery(query);
-
         const groupedUsers = {};
         users.forEach(user => {
             const { job } = user;
