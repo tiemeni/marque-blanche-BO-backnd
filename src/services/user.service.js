@@ -18,7 +18,8 @@ module.exports = {
         return await User.findOne(query);
     },
     findUserById: async (id) => {
-        return await User.findById(id).select('-password');
+        return await User.findById(id)
+            .select('-password').populate('civility');
     },
     findUsers: async () => {
         return await User.find()

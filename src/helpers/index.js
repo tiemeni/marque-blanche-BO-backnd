@@ -1,4 +1,6 @@
+const { format } = require('date-fns');
 const dns = require('dns')
+const fr = require("date-fns/locale/fr")
 
 module.exports.startServer = async ({ connectDB, server, startServer, PORT }) => {
     console.clear();
@@ -30,44 +32,109 @@ function convertTime(time) {
     const date = new Date();
     date.setHours(parseInt(hours));
     date.setMinutes(parseInt(minutes));
+    date.setSeconds(parseInt(0))
     return date;
 }
 
-// Algorithm to calculate availability within a given time range
-module.exports.calculateAvailability = (practitioner, appointments) => {
-    const rangeEnd = convertTime(practitioner.endTime);
+const formatDateISO = (date) => {
+    return format(new Date(date), "EEEE dd MMMM yyyy", { locale: fr })
+}
 
-    appointments.sort((a, b) => a.start - b.start); // Sort appointments in ascending order of start time
+const formatResult = (key, data, availableTime) => {
+    const start = availableTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    return {
+        pname: data.name,
+        psurname: data.surname,
+        displayedDate: formatDateISO(key) + " à " + start,
+        date: key,
+        start: start
+    }
+}
+
+// Fonction pour obtenir tous les jours entre deux dates
+const getDaysBetweenDates = (startDate, endDate) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    const daysBetween = [];
+
+    // Boucle pour générer les dates intermédiaires
+    let currentDate = startDateObj;
+    while (currentDate <= endDateObj) {
+        daysBetween.push(currentDate.toISOString().slice(0, 10));
+        currentDate = new Date(currentDate.getTime() + oneDay);
+    }
+
+    return daysBetween;
+}
+
+
+// Algorithm to calculate availability within a given time range
+module.exports.calculateAvailability = (practitioner, appointments, querySlot) => {
+    const startTime = querySlot ? querySlot.start : practitioner.startTime || "08:00"
+    const endTime = querySlot ? querySlot.end : practitioner.endTime ?? "18:00"
+    const rangeEnd = convertTime(endTime);
+
+    const keys = Object.keys(appointments)
     const availabilities = [];
 
-    let currentTime = convertTime(practitioner.startTime);
-    for (const appointment of appointments) {
-        const appointmentStart = convertTime(appointment.start)
-        if (appointmentStart > currentTime) {
-            const differenceInMinutes = (appointmentStart - currentTime) / (1000 * 60);
-            if (differenceInMinutes >= practitioner.minInterval) {
-                const reste = Math.floor(differenceInMinutes / practitioner.minInterval)
 
-                for (let index = 0; index < reste; index++) {
-                    const availableTime = new Date(currentTime.getTime() + practitioner.minInterval * 60 * 1000 * index);
-                    if (availableTime < rangeEnd) {
-                        availabilities.push(availableTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    for (let key of keys) {
+        const rdvs = appointments[key];
+        let currentTime = convertTime(startTime);
+
+        for (const appointment of rdvs) {
+            const appointmentStart = convertTime(appointment.startTime)
+            if (appointmentStart > currentTime) {
+                const differenceInMinutes = (appointmentStart - currentTime) / (1000 * 60);
+                if (differenceInMinutes >= practitioner.timeSlot) {
+                    const reste = Math.floor(differenceInMinutes / practitioner.timeSlot)
+
+                    for (let index = 0; index < reste; index++) {
+                        const availableTime = new Date(currentTime.getTime() + practitioner.timeSlot * 60 * 1000 * index);
+                        if (availableTime < rangeEnd) {
+                            availabilities.push(formatResult(key, practitioner, availableTime));
+                        }
                     }
                 }
             }
+            currentTime = convertTime(appointment.endTime);
         }
-        currentTime = convertTime(appointment.end);
+        // Add availabilities until the end of the time range
+        while (currentTime < rangeEnd) {
+            const isEqual = currentTime.getTime() == convertTime(startTime).getTime()
+            if (isEqual) {
+                availabilities.push(formatResult(key, practitioner, new Date(currentTime.getTime())));
+            }
+
+            currentTime = new Date(currentTime.getTime() + practitioner.timeSlot * 60 * 1000);
+
+            if (currentTime <= rangeEnd) {
+                availabilities.push(formatResult(key, practitioner, currentTime));
+            }
+
+        }
     }
 
-    // Add availabilities until the end of the time range
-    while (currentTime < rangeEnd) {
-        currentTime = new Date(currentTime.getTime() + practitioner.minInterval * 60 * 1000);
-        if (currentTime <= rangeEnd) {
-            availabilities.push(currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-        }
-    }
+    const filtered = removeTodayExpiredDispo(availabilities)
 
-    return availabilities;
+    return filtered;
+}
+
+const removeTodayExpiredDispo = (availabilities) => {
+    const today = new Date();
+    const date = today.toISOString().slice(0, 10);
+    const now = today.toISOString().slice(11, 16);
+
+    return availabilities.filter(availability => {
+        if (availability.date === date) {
+            return availability.start > now
+        }
+        return availability
+    })
+
 }
 
 module.exports.formatDate = (date) => {
@@ -84,3 +151,98 @@ module.exports.formatDate = (date) => {
 
     return `${day} ${dayNumber} ${month} ${year}`;
 };
+
+const getLastDayOfInterval = (date) => {
+    const d = date ? new Date(date) : new Date()
+    const dayOfWeek = d.getDay()
+    let daysLeft = 0
+
+    if (dayOfWeek < 5) daysLeft = 6 - (dayOfWeek + (4 - dayOfWeek));
+    if (dayOfWeek === 5) daysLeft = dayOfWeek + 1;
+    if (dayOfWeek === 6) daysLeft = dayOfWeek;
+
+    const lastDay = new Date(d.getTime());
+    lastDay.setDate(d.getDate() + daysLeft);
+
+    lastDay.setHours(23);
+    lastDay.setMinutes(59);
+    lastDay.setSeconds(59);
+
+    return lastDay;
+}
+
+module.exports.replaceIfEmpty = (data, dates) => {
+    const keys = Object.keys(data);
+    if (keys.length < 3) {
+        const days = !Array.isArray(dates) ? getDaysBetweenDates(dates.start, dates.end) : dates;
+        days.forEach((day) => {
+            if (!data[day]) {
+                data[day] = []
+            }
+        })
+    }
+    return data
+}
+
+const getNextWeekdaysFromDate = (dateToday, targetDay) => {
+    if (targetDay === -1 || targetDay > 6) {
+        throw new Error("Jour de la semaine invalide. Veuillez saisir un jour valide en français (ex: 'lundi', 'mardi', 'samedi', etc.).");
+    }
+
+    const nextWeekdays = [];
+    let daysUntilNextTargetDay = (targetDay - dateToday.getDay() + 7) % 7;
+
+    for (let i = 0; i < 3; i++) {
+        const nextTargetDay = new Date(dateToday);
+        nextTargetDay.setDate(dateToday.getDate() + daysUntilNextTargetDay);
+        nextWeekdays.push(nextTargetDay.toISOString().slice(0, 10));
+        daysUntilNextTargetDay += 7;
+    }
+
+    return nextWeekdays;
+}
+
+module.exports.formatQuery = (req) => {
+    let startDate = new Date()
+    let query = { center: req.idCentre }
+    let endOfInterval = null;
+    let daysTab = null
+    let slot = null;
+
+    if (req.query.startDate) {
+        startDate = new Date(req.query.startDate);
+        query['date'] = { ...(query['date'] || {}), $gte: startDate };
+    } else {
+        startDate.setHours(1, 0, 0, 0);
+        query['date'] = { ...(query['date'] || {}), $gte: startDate };
+    }
+
+    if (req.query.day) {
+        const dayOfWeek = req.query.day;
+        if (dayOfWeek >= 0 && dayOfWeek <= 6) {
+            const nextDays = getNextWeekdaysFromDate(startDate, dayOfWeek)
+            query['dayOfWeek'] = req.query.day
+            query['date'] = { ...(query['date'] || {}), $in: nextDays }
+            daysTab = nextDays
+        }
+    } else {
+        endOfInterval = getLastDayOfInterval(req.query.startDate)
+        query['date'] = { ...(query['date'] || {}), $lte: endOfInterval };
+    }
+
+    if (req.query.idp) query['practitioner'] = req.query.idp
+
+    if (req.query.slotRange) {
+        const range = req.query.slotRange.split("-");
+        query['startTime'] = { $gte: range[0], $lte: range[1] };
+        slot = { start: range[0], end: range[1] }
+    }
+
+    return {
+        "query": query,
+        "startDate": startDate,
+        "endOfInterval": endOfInterval,
+        "daysTab": daysTab,
+        "querySlot": slot
+    }
+}

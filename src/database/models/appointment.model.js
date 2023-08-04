@@ -41,6 +41,10 @@ const appointmentModel = mongoose.Schema({
         type: Date,
         require
     },
+    dayOfWeek: {
+        type: Number,
+        require
+    },
     wasMoved: {
         type: Boolean,
         default: false

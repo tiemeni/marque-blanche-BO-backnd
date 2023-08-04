@@ -38,12 +38,13 @@ module.exports = {
                 path: "practitioner",
                 populate: {
                     path: "civility",
-                    model: "Civilities"
+                    model: "Civilities",
+                    select: "-password"
                 }
             })
     },
-    findAll: async () => {
-        return await Appointment.find({})
+    findAll: async (query) => {
+        return await Appointment.find(query)
     },
     deleteAll: async () => {
         return await Appointment.deleteMany({})

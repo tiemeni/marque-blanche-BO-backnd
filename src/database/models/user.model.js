@@ -70,7 +70,8 @@ const utilisateurModel = mongoose.Schema({
         default: false
     },
     timeSlot: {
-        type: Number
+        type: Number,
+        default: 30
     },
     startTime: {
         type: String,

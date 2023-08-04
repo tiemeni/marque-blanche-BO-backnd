@@ -1,8 +1,9 @@
 const handler = require("../../commons/response.handler")
 const { httpStatus } = require("../../commons/constants")
-const { calculateAvailability, formatDate } = require("../../helpers")
+const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery } = require("../../helpers")
 const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
+const { format } = require("date-fns");
 
 /**
  * Enregistrer un rendez-vous
@@ -21,6 +22,7 @@ const makeAppointment = async (req, res) => {
 
         const result = await appointementService.createAppointment({
             ...data,
+            dayOfWeek: new Date(data.date).getDay(),
             center: req.idCentre
         })
 
@@ -40,8 +42,6 @@ const makeAppointment = async (req, res) => {
  */
 const getAppointments = async (req, res) => {
     let query = { center: req.idCentre }
-
-    console.log("query", req.query)
 
     // Si des filtres sont definis
     if (req.query.idp) query['practitioner'] = { $in: req.query.idp.split(",") }
@@ -89,32 +89,70 @@ const presaveAppointment = (req, res) => {
 }
 
 /**
- * Rechercher des disponibilites en fonction du praticien
+ * @param {*} req
+ * @param {*} res
+ * @var idp identifiant du praticien 
+ * @var idLieu identifiant du lieu 
+ * @var idMotif identifiant du lieu 
+ * @var startDate date de début des rdvs
+ * @var slotRange creaneau de rdv
+ * @var day jour du rdv
+ * @returns listes de disponibilites
  */
 const searchAvailabilities = async (req, res) => {
-    const { practitioner, filter } = req.body;
     let appointements = [];
-    let infoPraticien = {};
+    let practitioner = {};
     let availabilities = [];
     let data = [];
-    const query = filter ? { ...filter } : {};
+    const { query, startDate, endOfInterval, daysTab, querySlot } = formatQuery(req)
 
-    if (praticien !== 0) {
-        appointements = await appointementService.findByQuery({ _id: praticien, date: new Date(), ...query });
-        infoPraticien = await userService.findUserById(practitioner);
-        availabilities = calculateAvailability(infoPraticien, appointements);
+    practitioner = await userService.findUserById(req.query.idp);
+    appointements = await appointementService.findByQuery(query);
 
-        if (availabilities.length === 0) return handler.errorHandler(res, "Aucune disponibilité avec ce praticien", httpStatus.NOT_FOUND)
-
-        for (const availability of availabilities) {
-            data.push({
-                practitioner: infoPraticien.civilite.name + " " + infoPraticien.name + " " + infoPraticien.surname,
-                date: formatDate(new Date()),
-                startTime: availability,
-            })
+    // Grouper les rdvs par jour
+    const groupedRdv = {};
+    appointements.forEach(rdv => {
+        const d = format(rdv.date, "yyyy-MM-dd")
+        if (!groupedRdv[d]) {
+            groupedRdv[d] = [];
         }
+        groupedRdv[d].push(rdv);
+    });
+
+    // Si rdvs non trouvés pour certains jours remplacer par []
+    const slot = daysTab ? daysTab : { start: startDate, end: endOfInterval }
+    const rdvs = replaceIfEmpty(groupedRdv, slot)
+
+    availabilities = calculateAvailability(practitioner, rdvs, querySlot);
+
+    if (availabilities.length === 0) {
+        let errMsg = "Aucune disponibilité avec ce praticien"
+        const Filterlength = Object.keys(query).length
+        if (Filterlength > 2) errMsg = "Aucune disponibilité selon vos critères de recherche"
+        return handler.errorHandler(res, errMsg, httpStatus.NOT_FOUND)
+    }
+
+    return handler.successHandler(res, availabilities, httpStatus.OK)
+}
+
+/**
+ * Fonction de personnel de modification des anciens enregistrements en cas d'ajout d'une variable
+ */
+async function updateExistingAppointments() {
+    try {
+        const appointmentsToUpdate = await appointementService.findAll({ dayOfWeek: { $exists: false } });
+
+        for (const appointment of appointmentsToUpdate) {
+            appointment.dayOfWeek = appointment.date ? appointment.date.getDay() : 0;
+            await appointment.save();
+        }
+
+        console.log("Mise à jour des enregistrements terminée.");
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour des enregistrements :", error);
     }
 }
+
 
 const deleteAll = async (req, res) => {
     try {
@@ -125,4 +163,4 @@ const deleteAll = async (req, res) => {
     }
 }
 
-module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments }
+module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments }
