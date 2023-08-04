@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
+const { USER, CENTRE, SPECIALITY, GROUP, CIVILITY, LIEU } = require('../../constants/entity');
 
 const utilisateurModel = mongoose.Schema({
     civility: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Civilities',
-        require
+        ref: CIVILITY,
+        required: true
     },
     name: {
         type: String,
-        require
+        required: true
     },
     surname: {
         type: String,
-        require
+        required: true
     },
     birthdate: {
         type: Date,
@@ -22,7 +23,7 @@ const utilisateurModel = mongoose.Schema({
     },
     email: {
         type: String,
-        require
+        required: true
     },
     password: {
         type: String,
@@ -36,20 +37,22 @@ const utilisateurModel = mongoose.Schema({
     },
     active: {
         type: Boolean,
-        require
+        required: true
     },
     groups: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Groups',
-        require
+        ref: GROUP,
+        required: true
     },
     affectation: {
-        type: String
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: LIEU,
+        required: true
     },
     job: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Specialty",
-        require
+        ref: SPECIALITY,
+        required: true
     },
     fonction: {
         type: String
@@ -62,8 +65,8 @@ const utilisateurModel = mongoose.Schema({
     },
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre',
-        require
+        ref: CENTRE,
+        required: true
     },
     isPraticien: {
         type: Boolean,
@@ -80,4 +83,4 @@ const utilisateurModel = mongoose.Schema({
         type: String
     }
 });
-module.exports = mongoose.model('User', utilisateurModel);
+module.exports = mongoose.model(USER, utilisateurModel);

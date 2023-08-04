@@ -12,7 +12,6 @@ module.exports = {
         return result;
     },
     generateToken: async (payload) => {
-        console.log()
         return await jwt.sign(payload, process.env.jwt || env.jwt, {
             expiresIn: '1h'
         });

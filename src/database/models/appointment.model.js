@@ -1,24 +1,25 @@
 const mongoose = require("mongoose")
+const { APPOINTMENT, MOTIF, PATIENT, CENTRE, USER } = require("../../constants/entity")
 
 const appointmentModel = mongoose.Schema({
     practitioner: {
         type: mongoose.Types.ObjectId,
-        ref: 'User',
+        ref: USER,
         require
     },
     center: {
         type: mongoose.Types.ObjectId,
-        ref: 'Centre',
+        ref: CENTRE,
         require
     },
     patient: {
         type: mongoose.Types.ObjectId,
-        ref: 'FichePatient',
+        ref: PATIENT,
         require
     },
     motif: {
         type: mongoose.Types.ObjectId,
-        ref: 'Motif',
+        ref: MOTIF,
         require
     },
     startTime: {
@@ -55,4 +56,4 @@ const appointmentModel = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Appointment', appointmentModel)
+module.exports = mongoose.model(APPOINTMENT, appointmentModel)

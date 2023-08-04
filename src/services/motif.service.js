@@ -1,5 +1,6 @@
 const Motif = require('../database/models/motif');
 const { encryptPassword } = require('../commons/auth');
+const { LIEU } = require('../constants/entity');
 
 module.exports = {
     createMotif: async (motif) => {
@@ -9,8 +10,12 @@ module.exports = {
     findMotifById: async (id) => {
         return await Motif.findById(id);
     },
-    findMotifs: async () => {
-        return await Motif.find({});
+    findMotifs: async (q) => {
+        return await Motif.find(q);
+    },
+    findMotifsByQuery: async query => {
+        return await Motif.find(query)
+        .populate("idLieux")
     },
     findOneByQuery: async (query) => {
         return await Motif.findOne(query);

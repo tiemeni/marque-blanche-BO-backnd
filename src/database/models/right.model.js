@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { RIGHT } = require('../../constants/entity');
 
 const droitsModel = mongoose.Schema({
     title: {
@@ -14,4 +15,4 @@ const droitsModel = mongoose.Schema({
         default: false
     }
 });
-module.exports = mongoose.model('Rights', droitsModel);
+module.exports = mongoose.model(RIGHT, droitsModel);

@@ -33,6 +33,15 @@ const getOneSpecialty = async (req, res) => {
     }
 }
 
+const getSpecialitiesByIdProfession = async (req, res) => {
+    try {
+        const result = await specialtyService.findSpecialtyByQuery({ idProfession: req.params.idProfession })
+        return handler.successHandler(res, result, httpStatus.ACCEPTED)
+    } catch (error) {
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 const updateSpecialtyById = async (req, res) => {
     try {
         const result = await specialtyService.updateSpecialty(req.params.id, req.idCentre, {
@@ -56,4 +65,4 @@ const deleteSpecialtyById = async (req, res) => {
     }
 }
 
-module.exports = { createSpecialty, getAllSpecialties, updateSpecialtyById, deleteSpecialtyById, getOneSpecialty }
+module.exports = { createSpecialty, getAllSpecialties, updateSpecialtyById, deleteSpecialtyById, getOneSpecialty, getSpecialitiesByIdProfession }

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
+const { LIEU, CENTRE } = require('../../constants/entity');
 
 const lieuModel = mongoose.Schema({
     label: {
         type: String,
-        require
+        required: true
     },
     ville: {
         type: String,
-        require
+        required: true
     },
     region: {
         type: String,
@@ -17,7 +18,7 @@ const lieuModel = mongoose.Schema({
     },
     reference: {
         type: String,
-        require
+        required: true
     },
     initiales: {
         type: String
@@ -28,12 +29,12 @@ const lieuModel = mongoose.Schema({
     },
     active: {
         type: Boolean,
-        require
+        required: true
     },
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre',
-        require
+        ref: CENTRE,
+        required: true
     }
 });
-module.exports = mongoose.model('Lieu', lieuModel);
+module.exports = mongoose.model(LIEU, lieuModel);

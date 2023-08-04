@@ -11,6 +11,7 @@ const checkCentre = require('./src/middlewares/center.middleware')
 
 //import all routes
 const usersRoutes = require('./src/routes/user.route')
+const professionRoutes = require('./src/routes/profession.routes')
 const motifRoutes = require('./src/routes/motif.route')
 const lieuRoutes = require('./src/routes/lieu.route')
 const structureRoute = require("./src/routes/centre.routes")
@@ -51,6 +52,7 @@ server.use('/lieu', checkCentre, lieuRoutes);
 server.use('/droits', rightsRoutes);
 server.use('/groupes', checkCentre, groupsRoutes);
 server.use('/civilites', civilitiesRoutes);
+server.use('/profession', professionRoutes);
 server.use('/appointments', checkCentre, appointmentRoutes);
 server.post('/verifyToken', verifyToken);
 server.get('/checkVersion', (req, res) => {

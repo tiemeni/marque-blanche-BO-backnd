@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
+const { PATIENT, CENTRE, RIGHT, CIVILITY } = require('../../constants/entity');
 
 const fichePatientModel = mongoose.Schema({
     civility: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Civilities",
-        require
+        ref: CIVILITY,
+        required: true
     },
     name: {
         type: String,
-        require
+        required: true
     },
     surname: {
         type: String,
-        require
+        required: true
     },
     birthdate: {
         type: String,
@@ -22,7 +23,7 @@ const fichePatientModel = mongoose.Schema({
     },
     email: {
         type: String,
-        require
+        required: true
     },
     initiales: {
         type: String
@@ -33,19 +34,19 @@ const fichePatientModel = mongoose.Schema({
     },
     active: {
         type: Boolean,
-        require
+        required: true
     },
     rights: [
         {
             type: mongoose.Schema.Types.ObjectId,
             require,
-            ref: 'Rights'
+            ref: RIGHT
         }
     ],
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Centre',
-        require
+        ref: CENTRE,
+        required: true
     }
 });
-module.exports = mongoose.model('FichePatient', fichePatientModel);
+module.exports = mongoose.model(PATIENT, fichePatientModel);
