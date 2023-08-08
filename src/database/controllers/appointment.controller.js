@@ -5,6 +5,7 @@ const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
 
+
 /**
  * Enregistrer un rendez-vous
  */
@@ -19,7 +20,6 @@ const makeAppointment = async (req, res) => {
             center: data.center
         });
         if (isExist) return handler.errorHandler(res, 'Ce rendez-vous a déjà été pris', httpStatus.NOT_ACCEPTABLE)
-
         const result = await appointementService.createAppointment({
             ...data,
             dayOfWeek: new Date(data.date).getDay(),

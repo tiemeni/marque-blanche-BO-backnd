@@ -22,6 +22,7 @@ const rightsRoutes = require('./src/routes/right.route')
 const groupsRoutes = require('./src/routes/group.route')
 const civilitiesRoutes = require('./src/routes/civility.route')
 const appointmentRoutes = require('./src/routes/appointment.route')
+const extUserToutes = require('./src/routes/extUser.route')
 
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
@@ -43,6 +44,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 server.use('/users', checkCentre, usersRoutes);
+server.use('/ext_users', extUserToutes);
 server.use('/motif', motifRoutes);
 server.use('/practitiens', checkCentre, practitiensRoutes);
 server.use('/specialites', checkCentre, specialitiesRoutes);

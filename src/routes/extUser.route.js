@@ -3,9 +3,6 @@ const userController = require('../database/controllers/user.controller');
 const auth = require('../middlewares/auth.middleware')
 
 // GET
-router.get('/', userController.getAllUsers);
-router.get('/lieu/', userController.getPraticienByIdLieu);
-router.get('/profession', userController.getUsersGroupByJob);
 router.get('/:userid', userController.getUserById);
 
 // POST
@@ -16,7 +13,6 @@ router.post('/register', userController.createUser);
 router.patch('/:userid', userController.updateUserById);
 
 // DELETE
-router.delete('/', userController.deleteAllUsers);
 router.delete('/:userid', userController.deleteUserById);
 
 module.exports = router;
