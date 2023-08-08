@@ -46,6 +46,16 @@ const getPatientById = async (req, res) => {
     }
 }
 
+const getPatientByName = async (req, res) => {
+    try {
+        const foundPatient = await patientService.findOneByQuery({ name: req.params.key, idCentre: req.query.idCentre });
+        if (foundPatient == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
+        return handler.successHandler(res, foundPatient)
+    } catch (err) {
+        return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 const updatePatient = async (req, res) => {
     try {
         const result = await patientService.updatePatient(req.params.patientId, req.idCentre, { $set: { ...req.body } });
@@ -55,4 +65,4 @@ const updatePatient = async (req, res) => {
     }
 }
 
-module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient }
+module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName }
