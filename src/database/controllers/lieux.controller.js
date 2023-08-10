@@ -32,7 +32,8 @@ const deleteLieuById = async (req, res) => {
 
 const getAllLieux = async (req, res) => {
     try {
-        const foundLieux = await lieuService.findLieus(req.idCentre);
+        const condition = req.idCentre ? { idCentre: req.idCentre } : {}
+        const foundLieux = await lieuService.findLieuByQuery(condition);
         return handler.successHandler(res, foundLieux)
     } catch (err) {
         return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
@@ -41,7 +42,8 @@ const getAllLieux = async (req, res) => {
 
 const getLieuById = async (req, res) => {
     try {
-        const foundLieu = await lieuService.findOneByQuery({ _id: req.params.lieuId, idCentre: req.idCentre });
+        const condition = req.idCentre ? { _id: req.params.lieuId, idCentre: req.idCentre } : { _id: req.params.lieuId }
+        const foundLieu = await lieuService.findOneByQuery(condition);
         if (foundLieu == null) return handler.errorHandler(res, 'No lieu founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundLieu)
     } catch (err) {

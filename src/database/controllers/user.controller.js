@@ -26,7 +26,7 @@ const signIn = async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const condition = req.idCentre ? { email: data.email, idCentre: req.idCentre } : { email: data.email }
+        const condition = req.idCentre ? { email: email, idCentre: req.idCentre } : { email: email }
         const user = await userService.findOneByQuery(condition)
         if (!user) {
             return handler.errorHandler(res, "User doesn't exist in our system", httpStatus.NOT_FOUND)
@@ -98,7 +98,8 @@ const getUsersGroupByJob = async (req, res) => {
 const getAllUsers = async (req, res) => {
     let foundUsers;
     try {
-        foundUsers = await userService.findUserByQuery({ isPraticien: req.query.isPraticien ?? false, idCentre: req.idCentre })
+        const condition = req.idCentre ? { isPraticien: req.query.isPraticien ?? false, idCentre: req.idCentre } : { isPraticien: req.query.isPraticien ?? false }
+        foundUsers = await userService.findUserByQuery(condition);
         return handler.successHandler(res, foundUsers)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)

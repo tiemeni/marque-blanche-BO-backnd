@@ -17,7 +17,8 @@ const createSpecialty = async (req, res) => {
 
 const getAllSpecialties = async (req, res) => {
     try {
-        const result = await specialtyService.findSpecialties(req.idCentre);
+        const condition = req.idCentre ? { idCentre: req.idCentre } : {}
+        const result = await specialtyService.findSpecialtyByQuery(condition);
         return handler.successHandler(res, result, httpStatus.ACCEPTED)
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
