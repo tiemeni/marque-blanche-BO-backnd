@@ -66,7 +66,6 @@ const utilisateurModel = mongoose.Schema({
     idCentre: {
         type: mongoose.Schema.Types.ObjectId,
         ref: CENTRE,
-        required: true
     },
     isPraticien: {
         type: Boolean,
