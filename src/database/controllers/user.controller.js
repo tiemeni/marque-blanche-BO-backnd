@@ -6,20 +6,15 @@ const { env } = require('../../config/env/variables')
 
 const createUser = async (req, res) => {
     const data = req.body
-
     try {
         // if user already exist
-        const isUserExist = await userService.findOneByQuery({
-            email: data.email,
-            idCentre: req.idCentre,
-        })
+        const condition = req.idCentre ? { email: data.email, idCentre: req.idCentre } : { email: data.email }
+        const isUserExist = await userService.findOneByQuery(condition)
         if (isUserExist) return handler.errorHandler(res, "User already exist", httpStatus.BAD_REQUEST)
 
         //create and store the new user
-        const result = await userService.createUser({
-            ...data,
-            idCentre: req.idCentre,
-        });
+        const payload = req.idCentre ? { ...data, idCentre: req.idCentre } : { ...data }
+        const result = await userService.createUser(payload);
 
         return handler.successHandler(res, result, httpStatus.CREATED)
     } catch (err) {
@@ -31,18 +26,17 @@ const signIn = async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const user = await userService.findOneByQuery({ email: email, idCentre: req.idCentre })
+        const condition = req.idCentre ? { email: data.email, idCentre: req.idCentre } : { email: data.email }
+        const user = await userService.findOneByQuery(condition)
         if (!user) {
             return handler.errorHandler(res, "User doesn't exist in our system", httpStatus.NOT_FOUND)
         }
 
         if (await auth.verifyPassword(password, user.password)) {
-            console.log(user._id)
             const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
             res.cookie(COOKIE_NAME, token, {
                 maxAge: env.EXPIRE_DATE,
                 sameSite: 'Lax',
-
             })
             return handler.successHandler(res, {
                 user,
@@ -58,11 +52,8 @@ const signIn = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const foundUser = await userService.findOneByQuery({
-            _id: req.params.userid,
-            idCentre: req.idCentre,
-            isPraticien: req.query.isPraticien ?? false
-        });
+        const condition = req.idCentre ? { _id: req.params.userid, idCentre: req.idCentre, isPraticien: req.query.isPraticien ?? false } : { _id: req.params.userid, isPraticien: req.query.isPraticien ?? false }
+        const foundUser = await userService.findOneByQuery(condition);
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
         return handler.successHandler(res, foundUser)
     } catch (err) {
