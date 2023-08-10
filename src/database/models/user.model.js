@@ -5,7 +5,6 @@ const utilisateurModel = mongoose.Schema({
     civility: {
         type: mongoose.Schema.Types.ObjectId,
         ref: CIVILITY,
-        required: true
     },
     name: {
         type: String,
@@ -42,17 +41,14 @@ const utilisateurModel = mongoose.Schema({
     groups: {
         type: mongoose.Schema.Types.ObjectId,
         ref: GROUP,
-        required: true
     },
     affectation: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: LIEU,
-        required: true
     },
     job: {
         type: mongoose.Schema.Types.ObjectId,
         ref: SPECIALITY,
-        required: true
     },
     fonction: {
         type: String
