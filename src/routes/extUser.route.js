@@ -3,8 +3,10 @@ const userController = require('../database/controllers/user.controller');
 const auth = require('../middlewares/auth.middleware')
 
 // GET
+router.get('/lieu', userController.getPraticienByIdLieu);
 router.get('/:userid', userController.getUserById);
 router.get('/', userController.getAllUsers);
+
 
 // POST
 router.post('/signin', userController.signIn);

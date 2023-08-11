@@ -62,6 +62,7 @@ const getUserById = async (req, res) => {
 }
 
 const getPraticienByIdLieu = async (req, res) => {
+    console.log('here')
     let concernedPraticens = []
     try {
         const condition = req.query.idCentre ? { idCentre: req.query.idCentre, isPraticien: true } : { isPraticien: true }
