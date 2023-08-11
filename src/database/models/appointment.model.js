@@ -52,7 +52,7 @@ const appointmentModel = mongoose.Schema({
     },
     status: {
         type: String,
-        default: 'Rendez-vous planifié'
+        default: 'Planifié'
     }
 })
 
