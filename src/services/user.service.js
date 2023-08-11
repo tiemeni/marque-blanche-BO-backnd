@@ -28,8 +28,9 @@ module.exports = {
             .populate("groups")
             .populate("job");
     },
-    updateUser: async (id, idc, query) => {
-        return await User.findOneAndUpdate({ _id: id, idCentre: idc }, query, { new: true });
+    updateUser: async (id, query, idc=null) => {
+        let request = idc ? { _id: id, idCentre: idc } : { _id: id }
+        return await User.findOneAndUpdate(request, query, { new: true });
     },
     findUserByQuery: async (query) => {
         return await User.find(query);
