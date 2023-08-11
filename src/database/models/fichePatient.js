@@ -5,7 +5,6 @@ const fichePatientModel = mongoose.Schema({
     civility: {
         type: mongoose.Schema.Types.ObjectId,
         ref: CIVILITY,
-        required: true
     },
     name: {
         type: String,
@@ -39,7 +38,6 @@ const fichePatientModel = mongoose.Schema({
     rights: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            require,
             ref: RIGHT
         }
     ],
