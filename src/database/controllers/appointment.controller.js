@@ -58,7 +58,7 @@ const getAppointments = async (req, res) => {
             const { civility } = practitioner
             result.push({
                 _id: appointment._id,
-                civility: civility?.abreviation || civility.label,
+                civility: civility?.abreviation || civility?.label,
                 name: practitioner.name,
                 surname: practitioner.surname,
                 patient: appointment.patient,
