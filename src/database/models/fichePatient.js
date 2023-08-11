@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { PATIENT, CENTRE, RIGHT, CIVILITY } = require('../../constants/entity');
+const { PATIENT, CENTRE, RIGHT, CIVILITY, USER } = require('../../constants/entity');
 
 const fichePatientModel = mongoose.Schema({
     civility: {
@@ -47,6 +47,7 @@ const fichePatientModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: CENTRE,
         required: true
-    }
+    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: USER }
 });
 module.exports = mongoose.model(PATIENT, fichePatientModel);
