@@ -2,8 +2,8 @@ const Appointment = require("../database/models/appointment.model")
 
 module.exports = {
     createAppointment: async (data) => {
-        let appointement = new Appointment(data)
-        await appointement.save()
+        let appointment = new Appointment(data)
+        await appointment.save()
         
         return await appointment.populate('practitioner').execPopulate();
     },
