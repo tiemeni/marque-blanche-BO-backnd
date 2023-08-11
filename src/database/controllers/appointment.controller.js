@@ -41,11 +41,12 @@ const makeAppointment = async (req, res) => {
  * @returns tableau de rendex-vous
  */
 const getAppointments = async (req, res) => {
-    let query = { center: req.idCentre }
+    let query = {}
 
     // Si des filtres sont definis
+    if (req?.idCentre) query['center'] = req.idCentre;
     if (req.query.idp) query['practitioner'] = { $in: req.query.idp.split(",") }
-    if (req.query.idpatient) query['patient'] = req.query.idpatient
+    if (req.query.idpatient) query['patient'] = { $in: req.query.idpatient.split(",") }
     if (req.query.idRdv) query["_id"] = req.query.idRdv
 
     try {
