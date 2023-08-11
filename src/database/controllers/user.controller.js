@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
 
         const token = await auth.generateToken({ id: result._id, username: result.email, type: 'user' })
 
-        return handler.successHandler(res, {...result, access_token: token}, httpStatus.CREATED)
+        return handler.successHandler(res, {result, access_token: token}, httpStatus.CREATED)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
