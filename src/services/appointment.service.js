@@ -5,7 +5,7 @@ module.exports = {
         let appointment = new Appointment(data)
         await appointment.save()
         
-        return await appointment.populate('practitioner').execPopulate();
+        return await appointment.populate('practitioner');
     },
     findAndGroup: async () => {
         return await Appointment.aggregate([
