@@ -67,7 +67,7 @@ const updatePatient = async (req, res) => {
 
 const deleteAll = async (req, res) => {
     try {
-        const result = await patientService.deleteAll();
+        const result = await patientService.deletePatients();
         return handler.successHandler(res, result, httpStatus.OK)
     } catch (error) {
         return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
