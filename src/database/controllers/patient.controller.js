@@ -65,4 +65,13 @@ const updatePatient = async (req, res) => {
     }
 }
 
-module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName }
+const deleteAll = async (req, res) => {
+    try {
+        const result = await patientService.deleteAll();
+        return handler.successHandler(res, result, httpStatus.OK)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName, deleteAll }
