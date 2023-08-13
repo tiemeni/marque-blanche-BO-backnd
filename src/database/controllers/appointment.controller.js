@@ -4,6 +4,7 @@ const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery } = requi
 const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
+const patientService = require("../../services/patient.service")
 
 
 /**
@@ -48,6 +49,15 @@ const getAppointments = async (req, res) => {
     if (req.query.idp) query['practitioner'] = { $in: req.query.idp.split(",") }
     if (req.query.idpatient) query['patient'] = { $in: req.query.idpatient.split(",") }
     if (req.query.idRdv) query["_id"] = req.query.idRdv
+
+    // Get des fiches patients
+    if (req.query.iduser) {
+        const patients = await patientService.findPatientByQuery({ user: req.query.iduser })
+        const  idList = patients.map(({ _id }) => _id)
+        
+        if(idList.length === 0) return handler.successHandler(res, [], httpStatus.OK)
+        query['patient'] = { $in:  idList}
+    }
 
     try {
         const appointments = await appointementService.findByQuery(query)
