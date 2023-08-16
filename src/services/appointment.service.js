@@ -38,11 +38,15 @@ module.exports = {
             })
             .populate({
                 path: "practitioner",
-                populate: {
+                populate: [{
                     path: "civility",
                     model: "Civilities",
                     select: "-password"
-                }
+                }, {
+                    path: "job",
+                    model: "Specialite",
+                    select: "title"
+                }]
             })
     },
     findAll: async (query) => {

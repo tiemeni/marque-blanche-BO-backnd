@@ -71,6 +71,7 @@ const getAppointments = async (req, res) => {
                 civility: civility?.abreviation || civility?.label,
                 name: practitioner.name,
                 surname: practitioner.surname,
+                profession: practitioner.job,
                 patient: appointment.patient,
                 motif: appointment.motif.label,
                 timeStart: appointment.startTime,
