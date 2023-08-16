@@ -81,7 +81,8 @@ const getAppointments = async (req, res) => {
                 duration: appointment.duration,
                 provenance: appointment.provenance,
                 wasMoved: appointment.wasMoved,
-                resourceId: practitioner._id
+                resourceId: practitioner._id,
+                status: appointment.status
             })
         }
 
