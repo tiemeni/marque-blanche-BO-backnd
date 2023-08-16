@@ -41,7 +41,7 @@ const formatDateISO = (date) => {
 }
 
 const formatResult = (key, data, availableTime) => {
-    const start = availableTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    const start = format(availableTime, 'HH:mm')
     return {
         pname: data.name,
         psurname: data.surname,
