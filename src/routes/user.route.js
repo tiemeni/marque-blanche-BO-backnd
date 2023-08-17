@@ -18,7 +18,7 @@ router.post('/register', userController.createUser);
 
 // PATCH
 router.patch('/:userid', userController.updateUserById);
-router.patch("/upload-photo", upload.single('photo'), userController.uploadPictured)
+router.patch("/upload-photo", upload.single('photo'), userController.uploadPicture)
 
 // DELETE
 router.delete('/', userController.deleteAllUsers);
