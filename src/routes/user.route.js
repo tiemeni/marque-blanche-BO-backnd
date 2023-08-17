@@ -2,7 +2,6 @@ const router = require('express').Router();
 const userController = require('../database/controllers/user.controller');
 const auth = require('../middlewares/auth.middleware')
 const multer = require('multer')
-const path = require('path')
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage });
@@ -19,7 +18,7 @@ router.post('/register', userController.createUser);
 
 // PATCH
 router.patch('/:userid', userController.updateUserById);
-router.patch('/upload-photo/:userid', upload.single('photo'), userController.uploadPicture)
+router.patch("/upload-photo", upload.single('photo'), userController.uploadPictured)
 
 // DELETE
 router.delete('/', userController.deleteAllUsers);
