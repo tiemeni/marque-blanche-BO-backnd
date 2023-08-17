@@ -4,13 +4,7 @@ const auth = require('../middlewares/auth.middleware')
 const multer = require('multer')
 const path = require('path')
 
-const storage = multer.diskStorage({
-    destination: '/src/uploads/', // Répertoire où les fichiers seront enregistrés
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    },
-});
+const storage = multer.memoryStorage()
 const upload = multer({ storage });
 
 // GET

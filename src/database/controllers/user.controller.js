@@ -3,6 +3,7 @@ const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
 const { env } = require('../../config/env/variables')
+const cloudinary = require('../../../cloudinary.config')
 
 const createUser = async (req, res) => {
     const data = req.body
@@ -137,19 +138,26 @@ const deleteAllUsers = async (req, res) => {
 const uploadPicture = async (req, res) => {
     try {
         const userId = req.params.userid
-        const photoPath = req.file.path;
+        const photo = req.file.buffer;
 
-        console.log(photoPath)
+        // Sauvegarde de l'image dans cloudinary
+        await cloudinary.uploader.upload_stream({
+            resource_type: 'raw',
+        }, async (error, result) => {
+            if (error) {
+                return handler.errorHandler(res, 'Erreur lors du téléchargement vers Cloudinary: ' + error, httpStatus.INTERNAL_SERVER_ERROR)
+            }
 
-        const user = await userService.findUserById(userId);
-        if (!user) {
-            return handler.errorHandler(res, "Utilisateur non trouvé", httpStatus.NOT_FOUND)
-        }
+            const user = await userService.findUserById(userId);
+            if (!user) {
+                return handler.errorHandler(res, "Utilisateur non trouvé", httpStatus.NOT_FOUND)
+            }
 
-        user.photo = photoPath
-        await user.save();
+            user.photo = result.secure_url
+            await user.save();
 
-        return handler.successHandler(res, user)
+            return handler.successHandler(res, user)
+        }).end(photo)
     } catch (error) {
         return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
