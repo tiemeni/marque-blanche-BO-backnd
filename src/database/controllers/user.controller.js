@@ -142,7 +142,7 @@ const uploadPicture = async (req, res) => {
 
         // Sauvegarde de l'image dans cloudinary
         await cloudinary.uploader.upload_stream({
-            resource_type: 'raw',
+            resource_type: 'image',
         }, async (error, result) => {
             if (error) {
                 return handler.errorHandler(res, 'Erreur lors du téléchargement vers Cloudinary: ' + error, httpStatus.INTERNAL_SERVER_ERROR)
