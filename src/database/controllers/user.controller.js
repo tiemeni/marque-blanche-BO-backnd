@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
 
         const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
 
-        return handler.successHandler(res, {user, access_token: token}, httpStatus.CREATED)
+        return handler.successHandler(res, { user, access_token: token }, httpStatus.CREATED)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -134,4 +134,25 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };
+const uploadPicture = async (req, res) => {
+    try {
+        const userId = req.params.userid
+        const photoPath = req.file.path;
+
+        console.log(photoPath)
+
+        const user = await userService.findUserById(userId);
+        if (!user) {
+            return handler.errorHandler(res, "Utilisateur non trouvé", httpStatus.NOT_FOUND)
+        }
+
+        user.photo = photoPath
+        await user.save();
+
+        return handler.successHandler(res, user)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture };

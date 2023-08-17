@@ -107,7 +107,7 @@ const presaveAppointment = (req, res) => {
  * @var idLieu identifiant du lieu 
  * @var idMotif identifiant du lieu 
  * @var startDate date de début des rdvs
- * @var slotRange creaneau de rdv
+ * @var slotRange creneau de rdv
  * @var day jour du rdv
  * @returns listes de disponibilites
  */
