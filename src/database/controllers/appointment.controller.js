@@ -71,7 +71,7 @@ const getAppointments = async (req, res) => {
                 civility: civility?.abreviation || civility?.label,
                 name: practitioner.name,
                 surname: practitioner.surname,
-                profession: practitioner.job,
+                profession: practitioner.job.title,
                 patient: appointment.patient,
                 motif: appointment.motif.label,
                 timeStart: appointment.startTime,
@@ -81,7 +81,8 @@ const getAppointments = async (req, res) => {
                 duration: appointment.duration,
                 provenance: appointment.provenance,
                 wasMoved: appointment.wasMoved,
-                resourceId: practitioner._id
+                resourceId: practitioner._id,
+                status: appointment.status
             })
         }
 
