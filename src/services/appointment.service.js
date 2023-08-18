@@ -2,8 +2,10 @@ const Appointment = require("../database/models/appointment.model")
 
 module.exports = {
     createAppointment: async (data) => {
-        let appointement = new Appointment(data)
-        return await appointement.save()
+        let appointment = new Appointment(data)
+        await appointment.save()
+
+        return await appointment.populate('practitioner');
     },
     findAndGroup: async () => {
         return await Appointment.aggregate([
@@ -36,11 +38,15 @@ module.exports = {
             })
             .populate({
                 path: "practitioner",
-                populate: {
+                populate: [{
                     path: "civility",
                     model: "Civilities",
                     select: "-password"
-                }
+                }, {
+                    path: "job",
+                    model: "Specialite",
+                    select: "title"
+                }]
             })
     },
     findAll: async (query) => {
@@ -51,5 +57,8 @@ module.exports = {
     },
     editeOneByQuery: async (id, idc, query) => {
         return await Appointment.findOneAndUpdate({ _id: id }, query, { new: true })
+    },
+    findAndDelete: async (id, query) => {
+        return await Appointment.findByIdAndDelete(id, query)
     }
 }

@@ -30,9 +30,8 @@ const extUserToutes = require('./src/routes/extUser.route')
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
 const { verifyToken } = require("./src/routes/verifyToken");
-require("dotenv").config({
-  path: path.join(__dirname, ".env"),
-});
+
+require("dotenv").config();
 
 server.use(cors({
   origin: "*",

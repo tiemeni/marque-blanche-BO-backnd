@@ -7,5 +7,6 @@ router.get('/', patientController.getAllPatients);
 router.get('/:patientId', patientController.getPatientById);
 router.get('/name/:key', patientController.getPatientByName);
 router.put('/:patientId', patientController.updatePatient);
+router.delete('/', patientController.deleteAll);
 
 module.exports = router;

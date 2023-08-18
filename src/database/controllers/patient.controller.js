@@ -8,7 +8,7 @@ const createPatient = async (req, res) => {
     try {
         // if user patient exists
         const isPatientExist = await patientService.findOneByQuery({ email: data.email, idCentre: req.idCentre })
-        if (isPatientExist) return handler.errorHandler(res, "Patient already exists", httpStatus.BAD_REQUEST)
+        if (isPatientExist) return handler.errorHandler(res, isPatientExist._id, httpStatus.BAD_REQUEST)
 
         //create and store the new patient
         const result = await patientService.createPatient({ ...data, idCentre: req.idCentre });
@@ -65,4 +65,13 @@ const updatePatient = async (req, res) => {
     }
 }
 
-module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName }
+const deleteAll = async (req, res) => {
+    try {
+        const result = await patientService.deletePatients();
+        return handler.successHandler(res, result, httpStatus.OK)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName, deleteAll }

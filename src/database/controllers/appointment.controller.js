@@ -4,6 +4,8 @@ const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery } = requi
 const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
+const patientService = require("../../services/patient.service")
+const appointmentService = require("../../services/appointment.service")
 
 
 /**
@@ -54,12 +56,22 @@ const upadteAppointment = async (req, res) => {
  * @returns tableau de rendex-vous
  */
 const getAppointments = async (req, res) => {
-    let query = { center: req.idCentre }
+    let query = {}
 
     // Si des filtres sont definis
+    if (req?.idCentre) query['center'] = req.idCentre;
     if (req.query.idp) query['practitioner'] = { $in: req.query.idp.split(",") }
-    if (req.query.idpatient) query['patient'] = req.query.idpatient
+    if (req.query.idpatient) query['patient'] = { $in: req.query.idpatient.split(",") }
     if (req.query.idRdv) query["_id"] = req.query.idRdv
+
+    // Get des fiches patients
+    if (req.query.iduser) {
+        const patients = await patientService.findPatientByQuery({ user: req.query.iduser })
+        const idList = patients.map(({ _id }) => _id)
+
+        if (idList.length === 0) return handler.successHandler(res, [], httpStatus.OK)
+        query['patient'] = { $in: idList }
+    }
 
     try {
         const appointments = await appointementService.findByQuery(query)
@@ -70,9 +82,10 @@ const getAppointments = async (req, res) => {
             const { civility } = practitioner
             result.push({
                 _id: appointment._id,
-                civility: civility?.abreviation || civility.label,
+                civility: civility?.abreviation || civility?.label,
                 name: practitioner.name,
                 surname: practitioner.surname,
+                profession: practitioner.job.title,
                 patient: appointment.patient,
                 motif: appointment.motif.label,
                 timeStart: appointment.startTime,
@@ -82,7 +95,8 @@ const getAppointments = async (req, res) => {
                 duration: appointment.duration,
                 provenance: appointment.provenance,
                 wasMoved: appointment.wasMoved,
-                resourceId: practitioner._id
+                resourceId: practitioner._id,
+                status: appointment.status
             })
         }
 
@@ -108,7 +122,7 @@ const presaveAppointment = (req, res) => {
  * @var idLieu identifiant du lieu 
  * @var idMotif identifiant du lieu 
  * @var startDate date de début des rdvs
- * @var slotRange creaneau de rdv
+ * @var slotRange creneau de rdv
  * @var day jour du rdv
  * @returns listes de disponibilites
  */
@@ -176,4 +190,13 @@ const deleteAll = async (req, res) => {
     }
 }
 
-module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments, upadteAppointment }
+const deleteOne = async (req, res) => {
+    try {
+        const result = await appointmentService.findAndDelete(req.params.id, { center: req.idCentre })
+        return handler.successHandler(res, result, httpStatus.OK)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { makeAppointment, presaveAppointment, upadteAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments, deleteOne }

@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
-const { PATIENT, CENTRE, RIGHT, CIVILITY } = require('../../constants/entity');
+const { PATIENT, CENTRE, RIGHT, CIVILITY, USER } = require('../../constants/entity');
 
 const fichePatientModel = mongoose.Schema({
     civility: {
         type: mongoose.Schema.Types.ObjectId,
         ref: CIVILITY,
-        required: true
     },
     name: {
         type: String,
@@ -39,7 +38,6 @@ const fichePatientModel = mongoose.Schema({
     rights: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            require,
             ref: RIGHT
         }
     ],
@@ -47,6 +45,7 @@ const fichePatientModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: CENTRE,
         required: true
-    }
+    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: USER }
 });
 module.exports = mongoose.model(PATIENT, fichePatientModel);

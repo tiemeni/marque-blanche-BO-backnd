@@ -31,8 +31,7 @@ const utilisateurModel = mongoose.Schema({
         type: String
     },
     photo: {
-        contentType: String,
-        data: Buffer
+        type: String,
     },
     active: {
         type: Boolean,

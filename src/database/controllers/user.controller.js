@@ -3,6 +3,7 @@ const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
 const { env } = require('../../config/env/variables')
+const cloudinary = require('../../../cloudinary.config')
 
 const createUser = async (req, res) => {
     const data = req.body
@@ -14,11 +15,11 @@ const createUser = async (req, res) => {
 
         //create and store the new user
         const payload = req.idCentre ? { ...data, idCentre: req.idCentre } : { ...data }
-        const result = await userService.createUser(payload);
+        const user = await userService.createUser(payload);
 
-        const token = await auth.generateToken({ id: result._id, username: result.email, type: 'user' })
+        const token = await auth.generateToken({ id: user._id, username: user.email, type: 'user' })
 
-        return handler.successHandler(res, {...result, access_token: token}, httpStatus.CREATED)
+        return handler.successHandler(res, { user, access_token: token }, httpStatus.CREATED)
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -109,8 +110,7 @@ const getAllUsers = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
-        const result = await userService.updateUser(req.params.userid, req.idCentre, { $set: { ...req.body } });
-        console.log(result)
+        const result = await userService.updateUser(req.params.userid, { $set: { ...req.body } }, req?.idCentre || null);
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -135,4 +135,32 @@ const deleteAllUsers = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob };
+const uploadPicture = async (req, res) => {
+    try {
+        const userId = req.params.userid
+        const photo = req.file.buffer;
+
+        // Sauvegarde de l'image dans cloudinary
+        await cloudinary.uploader.upload_stream({
+            resource_type: 'image',
+        }, async (error, result) => {
+            if (error) {
+                return handler.errorHandler(res, 'Erreur lors du téléchargement vers Cloudinary: ' + error, httpStatus.INTERNAL_SERVER_ERROR)
+            }
+
+            const user = await userService.findUserById(userId);
+            if (!user) {
+                return handler.errorHandler(res, "Utilisateur non trouvé", httpStatus.NOT_FOUND)
+            }
+
+            user.photo = result.secure_url
+            await user.save();
+
+            return handler.successHandler(res, user)
+        }).end(photo)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture };
