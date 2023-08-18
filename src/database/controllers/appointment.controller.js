@@ -34,6 +34,19 @@ const makeAppointment = async (req, res) => {
     }
 }
 
+const upadteAppointment = async (req, res) => {
+    const data = req.body;
+    console.log(req.params.idRdv, req.query.idCentre)
+    try {
+        const result = await appointementService.editeOneByQuery(req.params.idRdv, req.query.idCentre, {
+            ...data,
+        })
+        return handler.successHandler(res, result, httpStatus.CREATED)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 /**
  * Récuperer les rendez-vous des praticiens par filtre s'ils sont définis
  * @param idCentre
@@ -186,4 +199,4 @@ const deleteOne = async (req, res) => {
     }
 }
 
-module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments, deleteOne }
+module.exports = { makeAppointment, presaveAppointment, upadteAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments, deleteOne }

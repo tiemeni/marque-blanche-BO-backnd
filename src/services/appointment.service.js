@@ -55,6 +55,9 @@ module.exports = {
     deleteAll: async () => {
         return await Appointment.deleteMany({})
     },
+    editeOneByQuery: async (id, idc, query) => {
+        return await Appointment.findOneAndUpdate({ _id: id }, query, { new: true })
+    },
     findAndDelete: async (id, query) => {
         return await Appointment.findByIdAndDelete(id, query)
     }
