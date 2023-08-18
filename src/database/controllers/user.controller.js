@@ -163,4 +163,16 @@ const uploadPicture = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture };
+const updatePushToken = async (req, res) => {
+    try {
+        const { token } = req.body;
+        const userId = req.params.userid;
+
+        await userService.findAndUpdate(userId, { expoToken: token });
+        return handler.successHandler(res, { message: "Le token a bien été enregistré" })
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };

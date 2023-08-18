@@ -28,7 +28,7 @@ module.exports = {
             .populate("groups")
             .populate("job");
     },
-    updateUser: async (id, query, idc=null) => {
+    updateUser: async (id, query, idc = null) => {
         let request = idc ? { _id: id, idCentre: idc } : { _id: id }
         return await User.findOneAndUpdate(request, query, { new: true });
     },
@@ -53,4 +53,7 @@ module.exports = {
     deleteUsers: async () => {
         return await User.deleteMany();
     },
+    findAndUpdate: async (id, query) => {
+        return await User.findByIdAndUpdate(id, query);
+    }
 }
