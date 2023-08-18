@@ -4,6 +4,7 @@ const appointementController = require('../database/controllers/appointment.cont
 router.get('/', appointementController.getAppointments)
 router.post('/enregistrer_rdv', appointementController.makeAppointment)
 router.get('/rechercher_dispo', appointementController.searchAvailabilities)
+router.put('/update/:idRdv', appointementController.upadteAppointment)
 router.patch('/update', appointementController.updateExistingAppointments)
 router.delete('/', appointementController.deleteAll)
 

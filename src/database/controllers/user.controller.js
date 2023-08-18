@@ -110,6 +110,7 @@ const getAllUsers = async (req, res) => {
 const updateUserById = async (req, res) => {
     try {
         const result = await userService.updateUser(req.params.userid, req.idCentre, { $set: { ...req.body } });
+        console.log(result)
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
