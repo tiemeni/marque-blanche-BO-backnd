@@ -5,6 +5,7 @@ const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
 const patientService = require("../../services/patient.service")
+const appointmentService = require("../../services/appointment.service")
 
 
 /**
@@ -53,10 +54,10 @@ const getAppointments = async (req, res) => {
     // Get des fiches patients
     if (req.query.iduser) {
         const patients = await patientService.findPatientByQuery({ user: req.query.iduser })
-        const  idList = patients.map(({ _id }) => _id)
-        
-        if(idList.length === 0) return handler.successHandler(res, [], httpStatus.OK)
-        query['patient'] = { $in:  idList}
+        const idList = patients.map(({ _id }) => _id)
+
+        if (idList.length === 0) return handler.successHandler(res, [], httpStatus.OK)
+        query['patient'] = { $in: idList }
     }
 
     try {
@@ -176,4 +177,13 @@ const deleteAll = async (req, res) => {
     }
 }
 
-module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments }
+const deleteOne = async (req, res) => {
+    try {
+        const result = await appointmentService.findAndDelete(req.params.id, { center: req.idCentre })
+        return handler.successHandler(res, result, httpStatus.OK)
+    } catch (error) {
+        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { makeAppointment, presaveAppointment, searchAvailabilities, deleteAll, getAppointments, updateExistingAppointments, deleteOne }

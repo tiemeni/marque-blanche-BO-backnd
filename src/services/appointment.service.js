@@ -4,7 +4,7 @@ module.exports = {
     createAppointment: async (data) => {
         let appointment = new Appointment(data)
         await appointment.save()
-        
+
         return await appointment.populate('practitioner');
     },
     findAndGroup: async () => {
@@ -54,5 +54,8 @@ module.exports = {
     },
     deleteAll: async () => {
         return await Appointment.deleteMany({})
+    },
+    findAndDelete: async (id, query) => {
+        return await Appointment.findByIdAndDelete(id, query)
     }
 }

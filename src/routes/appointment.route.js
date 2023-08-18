@@ -6,5 +6,6 @@ router.post('/enregistrer_rdv', appointementController.makeAppointment)
 router.get('/rechercher_dispo', appointementController.searchAvailabilities)
 router.patch('/update', appointementController.updateExistingAppointments)
 router.delete('/', appointementController.deleteAll)
+router.delete('/:id', appointementController.deleteOne)
 
 module.exports = router
