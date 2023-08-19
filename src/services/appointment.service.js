@@ -64,11 +64,11 @@ module.exports = {
                 path: "motif",
                 select: "-default_time"
             })
+            .populate({
+            path: "practitioner"
+        })
     },
     findAndDelete: async (id, query) => {
         return await Appointment.findByIdAndDelete(id, query)
-        .populate({
-            path: "practitioner"
-        })
     }
 }
