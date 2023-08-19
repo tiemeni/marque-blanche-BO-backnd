@@ -65,7 +65,16 @@ module.exports = {
                 select: "-default_time"
             })
             .populate({
-            path: "practitioner"
+            path: "practitioner",
+                populate: [{
+                    path: "civility",
+                    model: "Civilities",
+                    select: "-password"
+                }, {
+                    path: "job",
+                    model: "Specialite",
+                    select: "title"
+                }]
         })
     },
     findAndDelete: async (id, query) => {
