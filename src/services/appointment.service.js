@@ -56,8 +56,13 @@ module.exports = {
         return await Appointment.deleteMany({})
     },
     editeOneByQuery: async (id, idc, query) => {
-        return await Appointment.findOneAndUpdate({ _id: id }, query, { new: true }).populate({
+        return await Appointment.findOneAndUpdate({ _id: id }, query, { new: true })
+            .populate({
                 path: "patient",
+            })
+            .populate({
+                path: "motif",
+                select: "-active -default_time"
             })
     },
     findAndDelete: async (id, query) => {
