@@ -90,6 +90,7 @@ const getAppointments = async (req, res) => {
                 motif: appointment.motif.label,
                 timeStart: appointment.startTime,
                 timeEnd: appointment.endTime,
+                idCentre: appointment?.centre ?? ""
                 date: appointment.date,
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,
