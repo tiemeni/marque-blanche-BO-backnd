@@ -30,7 +30,7 @@ module.exports = {
             .select("-center")
             .populate({
                 path: "motif",
-                select: "-active"
+                select: "-active -default_time"
             })
             .populate({
                 path: "patient",
