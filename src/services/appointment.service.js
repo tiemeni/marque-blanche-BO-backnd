@@ -62,7 +62,7 @@ module.exports = {
             })
             .populate({
                 path: "motif",
-                select: "-active -default_time"
+                select: "-default_time"
             })
     },
     findAndDelete: async (id, query) => {
