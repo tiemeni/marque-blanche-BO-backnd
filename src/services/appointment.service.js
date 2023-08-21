@@ -30,7 +30,7 @@ module.exports = {
             .select("-center")
             .populate({
                 path: "motif",
-                select: "-active"
+                select: "-active -default_time"
             })
             .populate({
                 path: "patient",
@@ -57,6 +57,25 @@ module.exports = {
     },
     editeOneByQuery: async (id, idc, query) => {
         return await Appointment.findOneAndUpdate({ _id: id }, query, { new: true })
+            .populate({
+                path: "patient",
+            })
+            .populate({
+                path: "motif",
+                select: "-default_time"
+            })
+            .populate({
+            path: "practitioner",
+                populate: [{
+                    path: "civility",
+                    model: "Civilities",
+                    select: "-password"
+                }, {
+                    path: "job",
+                    model: "Specialite",
+                    select: "title"
+                }]
+        })
     },
     findAndDelete: async (id, query) => {
         return await Appointment.findByIdAndDelete(id, query)

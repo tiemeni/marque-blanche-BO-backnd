@@ -75,6 +75,7 @@ const utilisateurModel = mongoose.Schema({
     },
     endTime: {
         type: String
-    }
+    },
+    expoToken: { type: String }
 });
 module.exports = mongoose.model(USER, utilisateurModel);

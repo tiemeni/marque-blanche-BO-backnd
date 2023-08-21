@@ -11,7 +11,7 @@ router.get('/', userController.getAllUsers);
 // POST
 router.post('/signin', userController.signIn);
 router.post('/register', userController.createUser);
-router.post('/resetPassword', userController.resetPassword);
+router.post('/process_verif_code', userController.processVerifCode);
 
 // PATCH
 router.patch('/:userid', userController.updateUserById);
