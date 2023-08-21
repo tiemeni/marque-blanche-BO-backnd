@@ -163,4 +163,12 @@ const uploadPicture = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture };
+const resetPassword = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log
+    }
+}
+
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, resetPassword };
