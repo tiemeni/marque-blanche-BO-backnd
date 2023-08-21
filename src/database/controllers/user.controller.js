@@ -2,8 +2,10 @@ const handler = require('../../commons/response.handler')
 const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
+
 const { env } = require('../../config/env/variables')
 const cloudinary = require('../../../cloudinary.config')
+const { generateRandomCode, sendCodeVerif } = require('../../helpers')
 
 const createUser = async (req, res) => {
     const data = req.body
@@ -163,16 +165,24 @@ const uploadPicture = async (req, res) => {
     }
 }
 
-const updatePushToken = async (req, res) => {
+const processVerifCode = async (req, res) => {
     try {
-        const { token } = req.body;
-        const userId = req.params.userid;
-
-        await userService.findAndUpdate(userId, { expoToken: token });
-        return handler.successHandler(res, { message: "Le token a bien été enregistré" })
+        const { email } = req.body
+        let codeVerif;
+        const userExist = await userService.findOneByQuery({ email: email })
+        if (userExist) {
+            codeVerif = generateRandomCode()
+            const callbacks = {
+                onError: (err) => handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR),
+                onSuccess: () => handler.successHandler(res, codeVerif)
+            }
+            const result = await sendCodeVerif(codeVerif, email, callbacks);
+        } else {
+            return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        }
     } catch (error) {
-        return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };
+module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, processVerifCode };
