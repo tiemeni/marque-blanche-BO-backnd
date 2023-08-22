@@ -20,7 +20,7 @@ router.post('/register', userController.createUser);
 // PATCH
 router.patch('/:userid', userController.updateUserById);
 router.put("/upload-photo/:userid", upload.single('photo'), userController.uploadPicture)
-//router.patch("/update-push-token/:userid", userController.updatePushToken)
+router.patch("/update-push-token/:userid", userController.updatePushToken)
 
 // DELETE
 router.delete('/', userController.deleteAllUsers);
