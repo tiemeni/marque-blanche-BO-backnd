@@ -43,7 +43,6 @@ const signIn = async (req, res) => {
                 maxAge: env.EXPIRE_DATE,
                 sameSite: 'Lax',
             })
-            console.log(user)
             return handler.successHandler(res, {
                 user,
                 access_token: token
@@ -52,6 +51,7 @@ const signIn = async (req, res) => {
             return handler.errorHandler(res, "Invalid password", httpStatus.NOT_ACCEPTABLE)
         }
     } catch (err) {
+        console.log(err)
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
@@ -68,6 +68,7 @@ const getUserById = async (req, res) => {
 }
 
 const getPraticienByIdLieu = async (req, res) => {
+    console.log('here')
     let concernedPraticens = []
     try {
         const condition = req.query.idCentre ? { idCentre: req.query.idCentre, isPraticien: true } : { isPraticien: true }
@@ -114,7 +115,6 @@ const updateUserById = async (req, res) => {
     try {
         let extractedPw = req.body.password
         if (extractedPw) extractedPw = await auth.encryptPassword(extractedPw)
-        console.log(extractedPw)
         const result = await userService.updateUser(req.params.userid, { $set: { ...req.body, password: extractedPw } }, req?.idCentre || null);
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
