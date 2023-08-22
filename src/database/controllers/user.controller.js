@@ -174,7 +174,7 @@ const processVerifCode = async (req, res) => {
             codeVerif = generateRandomCode()
             const callbacks = {
                 onError: (err) => handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR),
-                onSuccess: () => handler.successHandler(res, codeVerif)
+                onSuccess: () => handler.successHandler(res, { codeVerif: codeVerif, id: userExist?._id })
             }
             const result = await sendCodeVerif(codeVerif, email, callbacks);
         } else {
