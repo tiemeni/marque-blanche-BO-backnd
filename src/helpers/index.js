@@ -1,6 +1,8 @@
 const { format } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
+const nodemailer = require("nodemailer");
+
 
 module.exports.startServer = async ({ connectDB, server, startServer, PORT }) => {
     console.clear();
