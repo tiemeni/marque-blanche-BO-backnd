@@ -4,6 +4,8 @@ const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
 const { env } = require('../../config/env/variables')
 const cloudinary = require('../../../cloudinary.config')
+const { generateRandomCode, sendCodeVerif } = require('../../helpers')
+
 
 const createUser = async (req, res) => {
     const data = req.body
@@ -110,7 +112,9 @@ const getAllUsers = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
-        const result = await userService.updateUser(req.params.userid, { $set: { ...req.body } }, req?.idCentre || null);
+        let extractedPw = req.body.password
+        if (extractedPw) extractedPw = await auth.encryptPassword(extractedPw)
+        const result = await userService.updateUser(req.params.userid, { $set: { ...req.body, password: extractedPw } }, req?.idCentre || null);
         return handler.successHandler(res, result, httpStatus.CREATED);
     } catch (err) {
         return handler.errorHandler(res, err.message, httpStatus.INTERNAL_SERVER_ERROR)
@@ -175,4 +179,24 @@ const updatePushToken = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };
+const processVerifCode = async (req, res) => {
+    try {
+        const { email } = req.body
+        let codeVerif;
+        const userExist = await userService.findOneByQuery({ email: email })
+        if (userExist) {
+            codeVerif = generateRandomCode()
+            const callbacks = {
+                onError: (err) => handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR),
+                onSuccess: () => handler.successHandler(res, { codeVerif: codeVerif, id: userExist?._id })
+            }
+            const result = await sendCodeVerif(codeVerif, email, callbacks);
+        } else {
+            return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+        }
+    } catch (error) {
+        return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };

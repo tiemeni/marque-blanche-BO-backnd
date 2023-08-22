@@ -35,7 +35,7 @@ const task = cron.schedule('*/10 * * * *', async () => {
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
         if (userExpoToken && !alreadySent) {
-            const formattedDate = format(appointment.date, "EEEE d MMMM yyyy 'à' HH'h'mm")
+            const formattedDate = format(appointment.date, "EEEE d MMMM yyyy 'à' HH'h'mm", { locale: fr })
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',
@@ -94,7 +94,26 @@ const upadteAppointment = async (req, res) => {
         const result = await appointementService.editeOneByQuery(req.params.idRdv, req.query.idCentre, {
             ...data,
         })
-        return handler.successHandler(res, result, httpStatus.CREATED)
+        const formatedData = {
+            id: result?._id,
+            civility: result?.practitioner?.civility?.label,
+            name: result?.practitioner?.name,
+            surname: result?.practitioner?.surname,
+            profession: result?.practitioner?.job?.title,
+            patient: result?.patient,
+            motif: result?.motif?.label,
+            timeStart: result?.startTime,
+            timeEnd: result?.endTime,
+            idCentre: result?.patient?.idCentre,
+            date: result?.date,
+            displayedDate: formatDate(result?.date) + " à " + result?.startTime,
+            provenance: result?.provenance,
+            wasMoved: result?.wasMoved,
+            resourceId: result?.practitioner?._id,
+            status: result?.status
+        }
+
+        return handler.successHandler(res, formatedData, httpStatus.CREATED)
     } catch (error) {
         return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -143,6 +162,7 @@ const getAppointments = async (req, res) => {
                 motif: appointment.motif.label,
                 timeStart: appointment.startTime,
                 timeEnd: appointment.endTime,
+                idCentre: appointment?.centre ?? "",
                 date: appointment.date,
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,

@@ -1,6 +1,8 @@
 const { format, parse } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
+const nodemailer = require("nodemailer");
+
 
 module.exports.startServer = async ({ connectDB, server, startServer, PORT }) => {
     console.clear();
@@ -252,4 +254,41 @@ module.exports.formatQuery = (req) => {
         "daysTab": daysTab,
         "querySlot": slot
     }
+}
+
+module.exports.generateRandomCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+
+    for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+
+    return code;
+}
+
+module.exports.sendCodeVerif = (code, mail, callbacks) => {
+    console.log('send Code to ...')
+    var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "tiemanirocket@gmail.com",
+            pass: "nvpwfjnwfdqxcrly",
+        },
+    });
+
+    var mainOption = {
+        from: "tiemanirocket@gmail.com",
+        to: mail,
+        subject: "CODE DE VERIFICATION",
+        html: "<H1>" + code + "</H1>"
+    }
+    transporter.sendMail(mainOption, (err, _data__) => {
+        if (err) {
+            callbacks.onError(err)
+        } else {
+            callbacks.onSuccess()
+        }
+    });
 }
