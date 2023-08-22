@@ -53,6 +53,10 @@ const appointmentModel = mongoose.Schema({
     status: {
         type: String,
         default: 'Planifié'
+    },
+    sent: {
+        type: Boolean,
+        default: false
     }
 })
 

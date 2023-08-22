@@ -1,4 +1,4 @@
-const { format } = require('date-fns');
+const { format, parse } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
 
@@ -41,12 +41,19 @@ const formatDateISO = (date) => {
 }
 
 const formatResult = (key, data, availableTime) => {
-    const start = format(availableTime, 'HH:mm')
+    const start = format(availableTime, 'HH:mm');
+    let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
+
+    const [hours, minutes] = start.split(":").map(Number)
+    parsedDate.setHours(hours)
+    parsedDate.setMinutes(minutes)
+
     return {
         pname: data.name,
         psurname: data.surname,
         displayedDate: formatDateISO(key) + " à " + start,
         date: key,
+        date_long: parsedDate,
         start: start
     }
 }

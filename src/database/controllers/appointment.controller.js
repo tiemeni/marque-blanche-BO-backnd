@@ -1,3 +1,5 @@
+const cron = require('node-cron')
+const axios = require('axios')
 const handler = require("../../commons/response.handler")
 const { httpStatus } = require("../../commons/constants")
 const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery } = require("../../helpers")
@@ -6,7 +8,58 @@ const userService = require("../../services/user.service")
 const { format } = require("date-fns");
 const patientService = require("../../services/patient.service")
 const appointmentService = require("../../services/appointment.service")
+const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+const fr = require("date-fns/locale/fr")
 
+
+// Tâche cron pour vérifier les rendez-vous dans la prochaine heure
+const task = cron.schedule('*/10 * * * *', async () => {
+    const currentTime = new Date();
+    const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
+
+    const appointments = await appointementService.findByQuery({
+        date: {
+            $gte: currentTime,
+            $lte: nextHour,
+        },
+    })
+
+
+    appointments.forEach(async (appointment) => {
+        const patient = await patientService.findPatientById(appointment.patient._id)
+        if (!patient) {
+            console.error('Utilisateur non trouvé pour le rendez-vous');
+            return;
+        }
+
+        const userExpoToken = patient?.user?.expoToken;
+        const alreadySent = appointment.sent;
+        if (userExpoToken && !alreadySent) {
+            const formattedDate = format(appointment.date, "EEEE d MMMM yyyy 'à' HH'h'mm")
+            const notification = {
+                to: userExpoToken,
+                title: 'Rappel de Rendez-vous',
+                body: `Votre rendez-vous avec le Dr. ${appointment.practitioner.name} commence dans une heure: ${formattedDate}`,
+            };
+
+            try {
+                const response = await axios.post(expoPushEndpoint, notification, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                });
+
+                const responseData = await response.data;
+                appointment.sent = true;
+                appointment.save()
+                console.log('Notification envoyée avec succès:', responseData);
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi de la notification:', error.message);
+            }
+        }
+    })
+});
 
 /**
  * Enregistrer un rendez-vous
@@ -130,7 +183,6 @@ const searchAvailabilities = async (req, res) => {
     let appointements = [];
     let practitioner = {};
     let availabilities = [];
-    let data = [];
     const { query, startDate, endOfInterval, daysTab, querySlot } = formatQuery(req)
 
     practitioner = await userService.findUserById(req.query.idp);

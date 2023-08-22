@@ -10,7 +10,7 @@ module.exports = {
         return await Patient.findOne(query);
     },
     findPatientById: async (id) => {
-        return await Patient.findById(id).select('-password');
+        return await Patient.findById(id).select('-password').populate("user");
     },
     findPatientByQuery: async (query) => {
         return await Patient.find(query).select('-password');

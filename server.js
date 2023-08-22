@@ -30,6 +30,10 @@ const extUserToutes = require('./src/routes/extUser.route')
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
 const { verifyToken } = require("./src/routes/verifyToken");
+const setDefaultOptions = require('date-fns/setDefaultOptions');
+const frLocal = require('date-fns/locale/fr');
+
+setDefaultOptions({ locale: frLocal })
 
 require("dotenv").config();
 
