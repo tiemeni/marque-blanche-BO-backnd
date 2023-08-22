@@ -43,7 +43,7 @@ const formatDateISO = (date) => {
 }
 
 const formatResult = (key, data, availableTime) => {
-    const start = format(availableTime, 'HH:mm');
+    const start = format(availableTime, 'HH:mm', { locale: fr });
     let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
 
     const [hours, minutes] = start.split(":").map(Number)
