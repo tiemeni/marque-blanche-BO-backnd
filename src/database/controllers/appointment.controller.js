@@ -10,10 +10,12 @@ const patientService = require("../../services/patient.service")
 const appointmentService = require("../../services/appointment.service")
 const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
 const fr = require("date-fns/locale/fr")
+const moment = require('moment-timezone');
+
 
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
-const task = cron.schedule('*/10 * * * *', async () => {
+const task = cron.schedule('* * * * *', async () => {
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
@@ -35,7 +37,7 @@ const task = cron.schedule('*/10 * * * *', async () => {
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
         if (userExpoToken && !alreadySent) {
-            const formattedDate = format(appointment.date, "EEEE d MMMM yyyy 'à' HH'h'mm", { locale: fr })
+            const formattedDate = moment(appointment.date_long).format("YYYY-MM-DD à HH:mm:ss");
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',

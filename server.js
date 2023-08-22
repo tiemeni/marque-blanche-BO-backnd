@@ -26,14 +26,11 @@ const groupsRoutes = require('./src/routes/group.route')
 const civilitiesRoutes = require('./src/routes/civility.route')
 const appointmentRoutes = require('./src/routes/appointment.route')
 const extUserToutes = require('./src/routes/extUser.route')
+const moment = require('moment-timezone');
 
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
 const { verifyToken } = require("./src/routes/verifyToken");
-const setDefaultOptions = require('date-fns/setDefaultOptions');
-const frLocal = require('date-fns/locale/fr');
-
-setDefaultOptions({ locale: frLocal })
 
 require("dotenv").config();
 
@@ -69,6 +66,8 @@ server.post('/verifyToken', verifyToken);
 server.get('/checkVersion', (req, res) => {
   res.send("version backoffice gatewayDoc 24-07 midi")
 });
+
+moment.tz.setDefault('Africa/Douala')
 
 startServer({ connectDB, server, startServer, PORT });
 
