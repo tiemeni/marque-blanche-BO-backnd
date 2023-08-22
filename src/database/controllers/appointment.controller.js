@@ -18,7 +18,7 @@ const task = cron.schedule('*/10 * * * *', async () => {
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
     const appointments = await appointementService.findByQuery({
-        date: {
+        date_long: {
             $gte: currentTime,
             $lte: nextHour,
         },

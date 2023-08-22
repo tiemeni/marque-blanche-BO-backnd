@@ -42,6 +42,10 @@ const appointmentModel = mongoose.Schema({
         type: Date,
         require
     },
+    date_long: {
+        type: Date,
+        require
+    },
     dayOfWeek: {
         type: Number,
         require
