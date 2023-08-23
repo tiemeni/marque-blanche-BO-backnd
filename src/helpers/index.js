@@ -44,7 +44,7 @@ const formatDateISO = (date) => {
 }
 
 const formatResult = (key, data, availableTime) => {
-    const start = format(availableTime, 'HH:mm', { locale: fr });
+    const start = moment(availableTime).format('HH:mm')
     let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
 
     const [hours, minutes] = start.split(":").map(Number)
@@ -136,15 +136,13 @@ module.exports.calculateAvailability = (practitioner, appointments, querySlot) =
 const removeTodayExpiredDispo = (availabilities) => {
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
-    const now = today.toISOString().slice(11, 16);
 
     return availabilities.filter(availability => {
         if (availability.date === date) {
-            return availability.start > now
+            return availability.date_long > today
         }
         return availability
     })
-
 }
 
 module.exports.formatDate = (date) => {
@@ -270,7 +268,6 @@ module.exports.generateRandomCode = () => {
 }
 
 module.exports.sendCodeVerif = (code, mail, callbacks) => {
-    console.log('send Code to ...')
     var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
