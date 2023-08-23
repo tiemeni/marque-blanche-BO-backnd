@@ -14,18 +14,19 @@ const moment = require('moment-timezone');
 
 
 
+
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
+
     const appointments = await appointementService.findByQuery({
         date_long: {
-            $gte: currentTime,
-            $lte: nextHour,
+            $gte: format(currentTime, "yyyy-MM-dd'T'HH:mm", { locale: fr }),
+            $lte: format(nextHour, "yyyy-MM-dd'T'HH:mm", { locale: fr }),
         },
     })
-
 
     appointments.forEach(async (appointment) => {
         const patient = await patientService.findPatientById(appointment.patient._id)
@@ -37,11 +38,11 @@ const task = cron.schedule('* * * * *', async () => {
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
         if (userExpoToken && !alreadySent) {
-            const formattedDate = moment(appointment.date_long).format("YYYY-MM-DD à HH:mm:ss");
+            console.log(patient?.user)
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',
-                body: `Votre rendez-vous avec le Dr. ${appointment.practitioner.name} commence dans une heure: ${formattedDate}`,
+                body: `Votre rendez-vous avec le Dr. ${appointment.practitioner.name} commence dans une heure: ${appointment?.motif?.nom}`,
             };
 
             try {

@@ -1,4 +1,4 @@
-const { format, parse } = require('date-fns');
+const { format, parse, formatISO } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
 const nodemailer = require("nodemailer");
@@ -39,13 +39,14 @@ function convertTime(time) {
     return date;
 }
 
-const formatDateISO = (date) => {
-    return format(new Date(date), "EEEE dd MMMM yyyy", { locale: fr })
+const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
+    return format(new Date(date), template, { locale: fr })
 }
 
 const formatResult = (key, data, availableTime) => {
-    const start = format(availableTime, 'HH:mm', { locale: fr })
+    const start = format(availableTime, 'HH:mm')
     let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
+
 
     const [hours, minutes] = start.split(":").map(Number)
     parsedDate.setHours(hours)
@@ -55,8 +56,9 @@ const formatResult = (key, data, availableTime) => {
         pname: data.name,
         psurname: data.surname,
         displayedDate: formatDateISO(key) + " à " + start,
+        date_aff: formatDateISO(key, "dd/MM/yyyy"),
         date: key,
-        date_long: parsedDate,
+        date_long: formatDateISO(parsedDate, "yyyy-MM-dd'T'HH:mm"),
         start: start
     }
 }
@@ -120,7 +122,6 @@ module.exports.calculateAvailability = (practitioner, appointments, querySlot) =
             }
 
             currentTime = new Date(currentTime.getTime() + practitioner.timeSlot * 60 * 1000);
-
             if (currentTime <= rangeEnd) {
                 availabilities.push(formatResult(key, practitioner, currentTime));
             }
@@ -134,8 +135,7 @@ module.exports.calculateAvailability = (practitioner, appointments, querySlot) =
 }
 
 const removeTodayExpiredDispo = (availabilities) => {
-    const today = new Date();
-    const date = today.toISOString().slice(0, 10);
+    const today = formatDateISO(new Date(), "yyyy-MM-dd'T'HH:mm");
 
     return availabilities.filter(availability => {
         return availability.date_long > today
