@@ -138,10 +138,7 @@ const removeTodayExpiredDispo = (availabilities) => {
     const date = today.toISOString().slice(0, 10);
 
     return availabilities.filter(availability => {
-        if (availability.date === date) {
-            return availability.date_long > today
-        }
-        return availability
+        return availability.date_long > today
     })
 }
 
