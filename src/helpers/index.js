@@ -1,9 +1,11 @@
-const { format, parse, formatISO } = require('date-fns');
+const { parse, formatISO, format } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
 const nodemailer = require("nodemailer");
-const moment = require('moment-timezone')
+const { utcToZonedTime } = require('date-fns-tz')
+const formatTz = require('date-fns-tz/format')
 
+const timeZone = "Africa/Johannesburg"
 
 module.exports.startServer = async ({ connectDB, server, startServer, PORT }) => {
     console.clear();
@@ -43,10 +45,11 @@ const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
     return format(new Date(date), template, { locale: fr })
 }
 
-const formatResult = (key, data, availableTime) => {
-    const start = format(availableTime, 'HH:mm')
-    let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
+const formatUtc = (date) => utcToZonedTime(date, timeZone)
 
+const formatResult = (key, data, availableTime) => {
+    const start = formatTz(availableTime, 'HH:mm', timeZone)
+    let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
 
     const [hours, minutes] = start.split(":").map(Number)
     parsedDate.setHours(hours)

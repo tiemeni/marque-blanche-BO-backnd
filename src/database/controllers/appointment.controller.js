@@ -9,22 +9,24 @@ const { format } = require("date-fns");
 const patientService = require("../../services/patient.service")
 const appointmentService = require("../../services/appointment.service")
 const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
-const fr = require("date-fns/locale/fr")
-const moment = require('moment-timezone');
+const formatTz = require('date-fns-tz/format')
 
-
-
+const timeZone = "Africa/Johannesburg"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
+    const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
+    const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
+
+    console.log(start, end)
 
     const appointments = await appointementService.findByQuery({
         date_long: {
-            $gte: format(currentTime, "yyyy-MM-dd'T'HH:mm", { locale: fr }),
-            $lte: format(nextHour, "yyyy-MM-dd'T'HH:mm", { locale: fr }),
+            $gte: start,
+            $lte: end,
         },
     })
 
