@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 const { utcToZonedTime } = require('date-fns-tz')
 const formatTz = require('date-fns-tz/format')
 
-const timeZone = "Africa/Johannesburg"
+const timeZone = "Africa/Douala"
 
 module.exports.startServer = async ({ connectDB, server, startServer, PORT }) => {
     console.clear();

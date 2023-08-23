@@ -11,7 +11,7 @@ const appointmentService = require("../../services/appointment.service")
 const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
 const formatTz = require('date-fns-tz/format')
 
-const timeZone = "Africa/Johannesburg"
+const timeZone = "Africa/Douala"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
