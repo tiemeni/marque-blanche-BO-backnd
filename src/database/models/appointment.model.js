@@ -61,6 +61,10 @@ const appointmentModel = mongoose.Schema({
     sent: {
         type: Boolean,
         default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     }
 })
 

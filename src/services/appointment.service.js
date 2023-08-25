@@ -27,7 +27,6 @@ module.exports = {
         return await Appointment
             .find(query)
             .select("-patient")
-            .select("-center")
             .populate({
                 path: "motif",
                 select: "-active -default_time"
@@ -36,6 +35,7 @@ module.exports = {
                 path: "patient",
                 select: "-rights -active -password -civility"
             })
+            .populate("center")
             .populate({
                 path: "practitioner",
                 populate: [{
@@ -65,7 +65,7 @@ module.exports = {
                 select: "-default_time"
             })
             .populate({
-            path: "practitioner",
+                path: "practitioner",
                 populate: [{
                     path: "civility",
                     model: "Civilities",
@@ -75,7 +75,7 @@ module.exports = {
                     model: "Specialite",
                     select: "title"
                 }]
-        })
+            })
     },
     findAndDelete: async (id, query) => {
         return await Appointment.findByIdAndDelete(id, query)

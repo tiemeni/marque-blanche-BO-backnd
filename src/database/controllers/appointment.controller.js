@@ -18,11 +18,10 @@ const task = cron.schedule('* * * * *', async () => {
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
+    
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
-
-    console.log(start, end)
-
+    
     const appointments = await appointementService.findByQuery({
         date_long: {
             $gte: start,
@@ -40,7 +39,6 @@ const task = cron.schedule('* * * * *', async () => {
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
         if (userExpoToken && !alreadySent) {
-            console.log(patient?.user)
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',
@@ -83,7 +81,8 @@ const makeAppointment = async (req, res) => {
         const result = await appointementService.createAppointment({
             ...data,
             dayOfWeek: new Date(data.date).getDay(),
-            center: req.idCentre
+            center: req.idCentre,
+            created_at: formatTz(new Date(), "yyyy-MM-dd'T'HH:mm", timeZone)
         })
 
         return handler.successHandler(res, result, httpStatus.CREATED)
@@ -115,7 +114,8 @@ const upadteAppointment = async (req, res) => {
             provenance: result?.provenance,
             wasMoved: result?.wasMoved,
             resourceId: result?.practitioner?._id,
-            status: result?.status
+            status: result?.status,
+            created_at: result.created_at,
         }
 
         return handler.successHandler(res, formatedData, httpStatus.CREATED)
@@ -168,13 +168,15 @@ const getAppointments = async (req, res) => {
                 timeStart: appointment.startTime,
                 timeEnd: appointment.endTime,
                 idCentre: appointment?.centre ?? "",
+                center: appointment.center,
                 date: appointment.date,
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,
                 provenance: appointment.provenance,
                 wasMoved: appointment.wasMoved,
                 resourceId: practitioner._id,
-                status: appointment.status
+                status: appointment.status,
+                created_at: appointment.created_at,
             })
         }
 
@@ -244,10 +246,10 @@ const searchAvailabilities = async (req, res) => {
  */
 async function updateExistingAppointments() {
     try {
-        const appointmentsToUpdate = await appointementService.findAll({ dayOfWeek: { $exists: false } });
+        const appointmentsToUpdate = await appointementService.findAll({ create_at: { $exists: false } });
 
         for (const appointment of appointmentsToUpdate) {
-            appointment.dayOfWeek = appointment.date ? appointment.date.getDay() : 0;
+            appointment.create_at = formatTz(new Date(), "yyyy-MM-dd'T'HH:mm", timeZone)
             await appointment.save();
         }
 

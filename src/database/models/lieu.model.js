@@ -35,6 +35,14 @@ const lieuModel = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: CENTRE,
         required: true
+    },
+    location: {
+        latitude: {
+            type: String,
+        },
+        longitude: {
+            type: String,
+        },
     }
 });
 module.exports = mongoose.model(LIEU, lieuModel);
