@@ -38,7 +38,7 @@ function convertTime(time) {
     date.setHours(parseInt(hours));
     date.setMinutes(parseInt(minutes));
     date.setSeconds(parseInt(0))
-    return date;
+    return formatUtc(date);
 }
 
 const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
@@ -48,7 +48,7 @@ const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
 const formatUtc = (date) => utcToZonedTime(date, timeZone)
 
 const formatResult = (key, data, availableTime) => {
-    const start = formatTz(availableTime, 'HH:mm', timeZone)
+    const start = formatTz(formatUtc(availableTime), 'HH:mm')
     let parsedDate = parse(key, 'yyyy-MM-dd', new Date());
 
     const [hours, minutes] = start.split(":").map(Number)
@@ -138,10 +138,10 @@ module.exports.calculateAvailability = (practitioner, appointments, querySlot) =
 }
 
 const removeTodayExpiredDispo = (availabilities) => {
-    const today = formatDateISO(new Date(), "yyyy-MM-dd'T'HH:mm");
+    const today = formatUtc(new Date());
 
     return availabilities.filter(availability => {
-        return availability.date_long > today
+        return formatUtc(availability.date_long) > today
     })
 }
 
@@ -268,7 +268,7 @@ module.exports.generateRandomCode = () => {
 }
 
 module.exports.sendCodeVerif = (code, mail, callbacks) => {
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: "tiemanirocket@gmail.com",
@@ -276,7 +276,7 @@ module.exports.sendCodeVerif = (code, mail, callbacks) => {
         },
     });
 
-    var mainOption = {
+    let mainOption = {
         from: "tiemanirocket@gmail.com",
         to: mail,
         subject: "CODE DE VERIFICATION",
