@@ -155,6 +155,7 @@ const getAppointments = async (req, res) => {
         let result = []
 
         for (const appointment of appointments) {
+            console.log(appointment)
             const { practitioner } = appointment
             const { civility } = practitioner
             result.push({
@@ -168,7 +169,7 @@ const getAppointments = async (req, res) => {
                 timeStart: appointment.startTime,
                 timeEnd: appointment.endTime,
                 idCentre: appointment?.centre ?? "",
-                center: appointment.center,
+                lieu: appointment.lieu,
                 date: appointment.date,
                 displayedDate: formatDate(appointment.date) + " à " + appointment.startTime,
                 duration: appointment.duration,

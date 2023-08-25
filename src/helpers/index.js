@@ -211,14 +211,14 @@ const getNextWeekdaysFromDate = (dateToday, targetDay) => {
 }
 
 module.exports.formatQuery = (req) => {
-    let startDate = new Date()
+    let startDate = formatTz(new Date(), "yyy-MM-dd'T'HH:mm")
     let query = { center: req.idCentre }
     let endOfInterval = null;
     let daysTab = null
     let slot = null;
 
     if (req.query.startDate) {
-        startDate = new Date(req.query.startDate);
+        startDate = formatTz(new Date(req.query.startDate), "yyyy-MM-dd'T'HH:mm", timeZone);
         query['date'] = { ...(query['date'] || {}), $gte: startDate };
     } else {
         startDate.setHours(1, 0, 0, 0);
