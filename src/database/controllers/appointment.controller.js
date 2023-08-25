@@ -155,7 +155,6 @@ const getAppointments = async (req, res) => {
         let result = []
 
         for (const appointment of appointments) {
-            console.log(appointment)
             const { practitioner } = appointment
             const { civility } = practitioner
             result.push({
