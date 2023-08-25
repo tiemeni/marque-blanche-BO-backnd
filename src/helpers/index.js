@@ -42,7 +42,7 @@ function convertTime(time) {
 }
 
 const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
-    return format(formatUtc(new Date(date)), template, { locale: fr })
+    return format(date, template, { locale: fr })
 }
 
 const formatUtc = (date) => utcToZonedTime(date, timeZone)
@@ -58,8 +58,8 @@ const formatResult = (key, data, availableTime) => {
     return {
         pname: data.name,
         psurname: data.surname,
-        displayedDate: formatDateISO(key) + " à " + start,
-        date_aff: formatDateISO(key, "dd/MM/yyyy"),
+        displayedDate: formatDateISO(formatUtc(key)) + " à " + start,
+        date_aff: formatDateISO(formatUtc(key), "dd/MM/yyyy"),
         date: key,
         date_long: formatDateISO(parsedDate, "yyyy-MM-dd'T'HH:mm"),
         start: start
