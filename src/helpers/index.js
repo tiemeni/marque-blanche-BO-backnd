@@ -42,7 +42,7 @@ function convertTime(time) {
 }
 
 const formatDateISO = (date, template = "EEEE dd MMMM yyyy") => {
-    return format(new Date(date), template, { locale: fr })
+    return format(formatUtc(new Date(date)), template, { locale: fr })
 }
 
 const formatUtc = (date) => utcToZonedTime(date, timeZone)

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { APPOINTMENT, MOTIF, PATIENT, CENTRE, USER } = require("../../constants/entity")
+const { APPOINTMENT, MOTIF, PATIENT, CENTRE, USER, LIEU } = require("../../constants/entity")
 
 const appointmentModel = mongoose.Schema({
     practitioner: {
@@ -7,7 +7,7 @@ const appointmentModel = mongoose.Schema({
         ref: USER,
         require
     },
-    lieu: { type: mongoose.Types.ObjectId, require },
+    lieu: { type: mongoose.Types.ObjectId, ref: LIEU , require },
     center: {
         type: mongoose.Types.ObjectId,
         ref: CENTRE,
