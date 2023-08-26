@@ -6,7 +6,8 @@ const findUserByQuery = async (query) => {
         .select('-password')
         .populate("civility")
         .populate("groups")
-        .populate("job");
+        .populate("job")
+        .populate("affectation")
 }
 module.exports = {
     createUser: async (user) => {
@@ -15,7 +16,7 @@ module.exports = {
         return await newUser.save();
     },
     findOneByQuery: async (query) => {
-        return await User.findOne(query);
+        return await User.findOne(query)
     },
     findUserById: async (id) => {
         return await User.findById(id)
