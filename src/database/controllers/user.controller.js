@@ -73,8 +73,8 @@ const getPraticienByIdLieu = async (req, res) => {
         const condition = req.query.idCentre ? { idCentre: req.query.idCentre, isPraticien: true } : { isPraticien: true }
         const foundUser = await userService.findUserByQuery(condition);
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
-        req.query.idLieu && foundUser?.map((e, _i) => {
-            if ((e.affectation.indexOf(req.query.idLieu) != -1) && (e.job == req.query.idSpeciality)) {
+        req.query.idLieu && foundUser?.forEach((e, _i) => {
+            if ((e.affectation?.find(o => o?._id == req.query.idLieu)) && (e.job == req.query.idSpeciality)) {
                 concernedPraticens.push(e)
             }
         })
