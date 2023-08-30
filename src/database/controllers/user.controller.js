@@ -192,7 +192,7 @@ const processVerifCode = async (req, res) => {
             }
             const result = await sendCodeVerif(codeVerif, email, callbacks);
         } else {
-            return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+            return handler.errorHandler(res, err, "user doesn't exist!")
         }
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
