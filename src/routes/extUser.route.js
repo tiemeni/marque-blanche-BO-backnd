@@ -6,6 +6,7 @@ const auth = require('../middlewares/auth.middleware')
 router.get('/lieu', userController.getPraticienByIdLieu);
 router.get('/:userid', userController.getUserById);
 router.get('/', userController.getAllUsers);
+router.get('/search/:searchKey', userController.searchPratByKey);
 
 
 // POST

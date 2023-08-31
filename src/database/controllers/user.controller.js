@@ -199,4 +199,20 @@ const processVerifCode = async (req, res) => {
     }
 }
 
-module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };
+const searchPratByKey = async (req, res) => {
+    const key = req.params.searchKey;
+    const query = { name: { $regex: key, $options: "i" }, isPraticien: true }
+    try {
+        const founds = await userService.findUserByQuery(query)
+        if (founds) {
+            console.log(founds)
+            return handler.successHandler(res, founds)
+        } else {
+            return handler.errorHandler(res, "une erreur s'est produite", 404)
+        }
+    } catch (error) {
+        handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken, searchPratByKey };
