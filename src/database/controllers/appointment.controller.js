@@ -14,7 +14,7 @@ const notificationService = require('../../services/notification.service')
 const notificationType = require('../../commons/notification.type')
 const fr = require('date-fns/locale/fr')
 
-const timeZone = "Africa/Douala"
+const timeZone = "West Africa Time - WAT"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
