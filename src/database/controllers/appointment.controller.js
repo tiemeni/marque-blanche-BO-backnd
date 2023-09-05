@@ -10,6 +10,9 @@ const patientService = require("../../services/patient.service")
 const appointmentService = require("../../services/appointment.service")
 const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
 const formatTz = require('date-fns-tz/format')
+const notificationService = require('../../services/notification.service')
+const notificationType = require('../../commons/notification.type')
+const fr = require('date-fns/locale/fr')
 
 const timeZone = "Africa/Douala"
 
@@ -18,10 +21,9 @@ const task = cron.schedule('* * * * *', async () => {
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
-    
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
-    
+
     const appointments = await appointementService.findByQuery({
         date_long: {
             $gte: start,
@@ -38,7 +40,7 @@ const task = cron.schedule('* * * * *', async () => {
 
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
-        if (userExpoToken && !alreadySent) {
+        if (userExpoToken && alreadySent) {
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',
@@ -68,7 +70,6 @@ const task = cron.schedule('* * * * *', async () => {
  * Enregistrer un rendez-vous
  */
 const makeAppointment = async (req, res) => {
-    // Code here
     const data = req.body;
 
     try {
@@ -83,6 +84,17 @@ const makeAppointment = async (req, res) => {
             dayOfWeek: new Date(data.date).getDay(),
             center: req.idCentre,
             created_at: formatTz(new Date(), "yyyy-MM-dd'T'HH:mm", timeZone)
+        })
+
+        const rdv = await appointementService.findByQuery({ _id: result._id })
+
+        // Create notification
+        await notificationService.create({
+            title: "Nouveau rendez-vous",
+            content: `Rendez-vous pris pour ${format(new Date(result.date_long), 'EEEE dd MMMM yyyy à HH:mm', { locale: fr })} au lieu dit ${rdv[0].lieu.label}`,
+            receiver: data.patient,
+            appointment: result?._id,
+            type: notificationType.APPOINTMENT_CREATED
         })
 
         return handler.successHandler(res, result, httpStatus.CREATED)

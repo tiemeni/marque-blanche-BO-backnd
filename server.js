@@ -26,6 +26,7 @@ const groupsRoutes = require('./src/routes/group.route')
 const civilitiesRoutes = require('./src/routes/civility.route')
 const appointmentRoutes = require('./src/routes/appointment.route')
 const extUserToutes = require('./src/routes/extUser.route')
+const notificationRoutes = require('./src/routes/notification.route')
 
 const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require('./src/helpers');
@@ -61,6 +62,7 @@ server.use('/groupes', checkCentre, groupsRoutes);
 server.use('/civilites', civilitiesRoutes);
 server.use('/profession', professionRoutes);
 server.use('/appointments', checkCentre, appointmentRoutes);
+server.use('/notifications', checkCentre, notificationRoutes);
 server.post('/verifyToken', verifyToken);
 server.get('/checkVersion', (req, res) => {
   res.send("version backoffice gatewayDoc 24-07 midi")
