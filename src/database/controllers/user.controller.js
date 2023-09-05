@@ -73,8 +73,8 @@ const getPraticienByIdLieu = async (req, res) => {
         const condition = req.query.idCentre ? { idCentre: req.query.idCentre, isPraticien: true } : { isPraticien: true }
         const foundUser = await userService.findUserByQuery(condition);
         if (foundUser == null) return handler.errorHandler(res, 'No user founded', httpStatus.NOT_FOUND);
-        req.query.idLieu && foundUser?.map((e, _i) => {
-            if ((e.affectation.indexOf(req.query.idLieu) != -1) && (e.job == req.query.idSpeciality)) {
+        req.query.idLieu && foundUser?.forEach((e, _i) => {
+            if ((e.affectation?.find(o => o?._id == req.query.idLieu)) && (e.job == req.query.idSpeciality)) {
                 concernedPraticens.push(e)
             }
         })
@@ -192,11 +192,27 @@ const processVerifCode = async (req, res) => {
             }
             const result = await sendCodeVerif(codeVerif, email, callbacks);
         } else {
-            return handler.errorHandler(res, err, httpStatus.INTERNAL_SERVER_ERROR)
+            return handler.errorHandler(res, "email doesn't exist!", 404)
         }
     } catch (error) {
         return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
-module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken };
+const searchPratByKey = async (req, res) => {
+    const key = req.params.searchKey;
+    const query = { name: { $regex: key, $options: "i" }, isPraticien: true }
+    try {
+        const founds = await userService.findUserByQuery(query)
+        if (founds) {
+            console.log(founds)
+            return handler.successHandler(res, founds)
+        } else {
+            return handler.errorHandler(res, "une erreur s'est produite", 404)
+        }
+    } catch (error) {
+        handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken, searchPratByKey };
