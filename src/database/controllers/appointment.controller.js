@@ -40,7 +40,7 @@ const task = cron.schedule('* * * * *', async () => {
 
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
-        if (userExpoToken && alreadySent) {
+        if (userExpoToken && !alreadySent) {
             const notification = {
                 to: userExpoToken,
                 title: 'Rappel de Rendez-vous',
