@@ -208,7 +208,7 @@ const searchPratByKey = async (req, res) => {
             console.log(founds)
             return handler.successHandler(res, founds)
         } else {
-            return handler.errorHandler(res, "une erreur s'est produite", 404)
+            return handler.errorHandler(res, [], 404)
         }
     } catch (error) {
         handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)

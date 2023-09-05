@@ -74,4 +74,19 @@ const deleteAll = async (req, res) => {
     }
 }
 
-module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName, deleteAll }
+const searchPatientsByKey = async (req, res) => {
+    const key = req.params.searchKey;
+    const query = { name: { $regex: key, $options: "i" }, idCentre: req.idCentre }
+    try {
+        const founds = await patientService.findPatientByQuery(query)
+        if (founds) {
+            return handler.successHandler(res, founds)
+        } else {
+            return handler.errorHandler(res, [], 404)
+        }
+    } catch (error) {
+        handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+module.exports = { createPatient, deletePatientById, getAllPatients, getPatientById, updatePatient, getPatientByName, deleteAll, searchPatientsByKey }
