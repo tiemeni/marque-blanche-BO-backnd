@@ -217,16 +217,13 @@ const searchPratByKey = async (req, res) => {
 }
 
 const searchPraticienByIdSpeciality = async (req, res) => {
-    //recuperer la cle de recherche :
     const key = req.params.searchKey
-    if (key?.toString()?.length > 3) {
+    if (key?.toString()?.length > 0) {
         const query = { label: { $regex: key, $options: "i" } }
-        //recuperer la specialité correspondante a la clée passée
         const foundSpeciality = await specialityService.findSpecialtyByQuery(query)
         if (foundSpeciality?.length > 0) {
             let scecificSpeciality = foundSpeciality[0]
             const query2 = { job: scecificSpeciality?._id, isPraticien: true }
-            //recuperer le praticien dont le job est l'id de cette specialité
             const concernedPraticien = await userService.findUserByQuery(query2);
             if (concernedPraticien) {
                 return handler.successHandler(res, concernedPraticien)
