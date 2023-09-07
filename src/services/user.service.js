@@ -37,6 +37,7 @@ module.exports = {
     findUserByQuery: async (query) => {
         return await User.find(query)
         .populate("affectation")
+        .populate("job")
     },
     findAndGroupByJob: async (query) => {
         const users = await findUserByQuery(query);
