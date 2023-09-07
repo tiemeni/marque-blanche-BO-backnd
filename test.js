@@ -1,32 +1,4 @@
-const nodemailer = require("nodemailer");
+const { sendNotification } = require("./src/helpers");
 
+sendNotification("cy8VhEb8QK24zxd04QSBOg:APA91bFf0lyS1vm8DqIK6AbvLMiUuMkcf9JQnh5raXp9X2cEJq36RHZOP5FaGs-ELhKMYXULKIpW7fX8g60NbPW7Se4jLEWkCRekZdvZAx85brf-azWsfM-qSS0eE8qvF0D_zeL2mRJm", "body", "title", "subtitle")
 
-
-const sendCodeVerif = async (code, mail) => {
-    var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: "tiemanirocket@gmail.com",
-            pass: "nvpwfjnwfdqxcrly",
-        },
-    });
-
-    var mainOption = {
-        from: "tiemanirocket@gmail.com",
-        to: mail,
-        subject: "CODE DE VERIFICATION",
-        html: "<H1>" + code + "</H1>"
-    }
-    return transporter.sendMail(mainOption, (err, data__) => {
-        if (err) {
-            return err
-        } else {
-            return data__
-        }
-    });
-}
-
-sendCodeVerif("1212", "tiemanirocket@gmail.com")
-    .then(data => {
-        console.log(data)
-    })

@@ -1,3 +1,6 @@
+const axios = require('axios')
+const { env } = require("../config/env/variables")
+
 const { parse, formatISO, format } = require('date-fns');
 const dns = require('dns')
 const fr = require("date-fns/locale/fr")
@@ -289,4 +292,29 @@ module.exports.sendCodeVerif = (code, mail, callbacks) => {
             callbacks.onSuccess()
         }
     });
+}
+
+module.exports.sendNotification = (token, body, title, subtitle) => {
+    const bodyReq = {
+        "to": token,
+        "notification": {
+            "body": body,
+            "title": title,
+            "subtitle": subtitle
+        }
+    }
+    return new Promise((a, r) => {
+        return axios.post(env.GOOGLE_NOTIFICATION_APIS_URL, bodyReq, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': env.AUTHORIZATION
+            }
+        })
+            .then(res => {
+                a(res?.data)
+            })
+            .catch(err => {
+                r(err)
+            })
+    })
 }

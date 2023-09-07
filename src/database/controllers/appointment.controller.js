@@ -2,7 +2,7 @@ const cron = require('node-cron')
 const axios = require('axios')
 const handler = require("../../commons/response.handler")
 const { httpStatus } = require("../../commons/constants")
-const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery } = require("../../helpers")
+const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery, sendNotification } = require("../../helpers")
 const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
@@ -41,24 +41,15 @@ const task = cron.schedule('* * * * *', async () => {
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment.sent;
         if (userExpoToken && !alreadySent) {
-            const notification = {
-                to: userExpoToken,
-                title: 'Rappel de Rendez-vous',
-                body: `Votre rendez-vous avec le Dr. ${appointment.practitioner.name} commence dans une heure: ${appointment?.motif?.nom}`,
-            };
-
             try {
-                const response = await axios.post(expoPushEndpoint, notification, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                });
-
-                const responseData = await response.data;
-                appointment.sent = true;
-                appointment.save()
-                console.log('Notification envoyée avec succès:', responseData);
+                sendNotification(
+                    userExpoToken,
+                    `Votre rendez-vous avec le Dr. ${appointment.practitioner.name} commence dans une heure: ${appointment?.motif?.nom}`,
+                    "Rappel de Rendez-vous"
+                ).then(res => {
+                    appointment.sent = true;
+                    appointment.save()
+                })
             } catch (error) {
                 console.error('Erreur lors de l\'envoi de la notification:', error.message);
             }
