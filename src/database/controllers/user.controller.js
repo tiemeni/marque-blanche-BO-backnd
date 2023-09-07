@@ -2,6 +2,7 @@ const handler = require('../../commons/response.handler')
 const { httpStatus, COOKIE_NAME } = require('../../commons/constants')
 const auth = require('../../commons/auth')
 const userService = require('../../services/user.service')
+const specialityService = require('../../services/specialty.service')
 const { env } = require('../../config/env/variables')
 const cloudinary = require('../../../cloudinary.config')
 const { generateRandomCode, sendCodeVerif } = require('../../helpers')
@@ -215,4 +216,29 @@ const searchPratByKey = async (req, res) => {
     }
 }
 
-module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken, searchPratByKey };
+const searchPraticienByIdSpeciality = async (req, res) => {
+    //recuperer la cle de recherche :
+    const key = req.params.searchKey
+    if (key?.toString()?.length > 3) {
+        const query = { label: { $regex: key, $options: "i" } }
+        //recuperer la specialité correspondante a la clée passée
+        const foundSpeciality = await specialityService.findSpecialtyByQuery(query)
+        if (foundSpeciality?.length > 0) {
+            let scecificSpeciality = foundSpeciality[0]
+            const query2 = { job: scecificSpeciality?._id, isPraticien: true }
+            //recuperer le praticien dont le job est l'id de cette specialité
+            const concernedPraticien = await userService.findUserByQuery(query2);
+            if (concernedPraticien) {
+                return handler.successHandler(res, concernedPraticien)
+            } else {
+                return handler.errorHandler(res, "une erreur est survenue!", httpStatus.INTERNAL_SERVER_ERROR)
+            }
+        } else {
+            return handler.successHandler(res, [])
+        }
+    } else {
+        return handler.successHandler(res, [])
+    }
+}
+
+module.exports = { createUser, processVerifCode, getPraticienByIdLieu, getUserById, getAllUsers, updateUserById, deleteUserById, signIn, deleteAllUsers, getUsersGroupByJob, uploadPicture, updatePushToken, searchPratByKey, searchPraticienByIdSpeciality };

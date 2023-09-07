@@ -7,6 +7,7 @@ router.get('/lieu', userController.getPraticienByIdLieu);
 router.get('/:userid', userController.getUserById);
 router.get('/', userController.getAllUsers);
 router.get('/search/:searchKey', userController.searchPratByKey);
+router.get('/searchBySpeciality/:searchKey', userController.searchPraticienByIdSpeciality);
 
 
 // POST
