@@ -19,8 +19,9 @@ const timeZone = "Africa/Douala"
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
     //console.log("launch cron ...")
-    const currentTime = new Date();
-    const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
+    const gmtTime = new Date();
+    const currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000);
+    const nextHour = new Date(currentTime.getTime() + 120 * 60 * 1000);
 
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
