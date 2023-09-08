@@ -20,8 +20,8 @@ const timeZone = "Africa/Douala"
 const task = cron.schedule('* * * * *', async () => {
     //console.log("launch cron ...")
     const gmtTime = new Date();
-    const currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000);
-    const nextHour = new Date(currentTime.getTime() + 120 * 60 * 1000);
+    const currentTime = new Date(gmtTime.getTime() + 60 * 60 * 1000);
+    const nextHour = new Date(gmtTime.getTime() + 120 * 60 * 1000);
 
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
