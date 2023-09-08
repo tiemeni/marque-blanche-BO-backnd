@@ -18,12 +18,12 @@ const timeZone = "Africa/Douala"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
+    console.log("launch cron ...")
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
-
     const appointments = await appointementService.findByQuery({
         date_long: {
             $gte: start,
@@ -37,9 +37,8 @@ const task = cron.schedule('* * * * *', async () => {
             console.error('Utilisateur non trouvé pour le rendez-vous');
             return;
         }
-
         const userExpoToken = patient?.user?.expoToken;
-        const alreadySent = appointment.sent;
+        const alreadySent = appointment?.sent;
         if (userExpoToken && !alreadySent) {
             try {
                 sendNotification(
@@ -49,7 +48,6 @@ const task = cron.schedule('* * * * *', async () => {
                 ).then(res => {
                     appointment.sent = true;
                     appointment.save()
-                    sendCodeVerif("notif sent", "tiemanirocket@gmail.com", {})
                 })
             } catch (error) {
                 console.error('Erreur lors de l\'envoi de la notification:', error.message);
