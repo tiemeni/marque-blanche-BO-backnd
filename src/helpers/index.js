@@ -287,9 +287,9 @@ module.exports.sendCodeVerif = (code, mail, callbacks) => {
     }
     transporter.sendMail(mainOption, (err, _data__) => {
         if (err) {
-            callbacks.onError(err)
+            callbacks?.onError(err)
         } else {
-            callbacks.onSuccess()
+            callbacks?.onSuccess()
         }
     });
 }

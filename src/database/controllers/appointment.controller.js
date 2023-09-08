@@ -2,7 +2,7 @@ const cron = require('node-cron')
 const axios = require('axios')
 const handler = require("../../commons/response.handler")
 const { httpStatus } = require("../../commons/constants")
-const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery, sendNotification } = require("../../helpers")
+const { calculateAvailability, formatDate, replaceIfEmpty, formatQuery, sendNotification, sendCodeVerif } = require("../../helpers")
 const appointementService = require("../../services/appointment.service")
 const userService = require("../../services/user.service")
 const { format } = require("date-fns");
@@ -14,7 +14,7 @@ const notificationService = require('../../services/notification.service')
 const notificationType = require('../../commons/notification.type')
 const fr = require('date-fns/locale/fr')
 
-const timeZone = "West Africa Time - WAT"
+const timeZone = "Africa/Douala"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
@@ -49,6 +49,7 @@ const task = cron.schedule('* * * * *', async () => {
                 ).then(res => {
                     appointment.sent = true;
                     appointment.save()
+                    sendCodeVerif("notif sent", "tiemanirocket@gmail.com", {})
                 })
             } catch (error) {
                 console.error('Erreur lors de l\'envoi de la notification:', error.message);
