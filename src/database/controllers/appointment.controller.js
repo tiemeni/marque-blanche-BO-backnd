@@ -18,16 +18,16 @@ const timeZone = "Africa/Douala"
 
 // Tâche cron pour vérifier les rendez-vous dans la prochaine heure
 const task = cron.schedule('* * * * *', async () => {
-    console.log("launch cron ...")
+    //console.log("launch cron ...")
     const currentTime = new Date();
     const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
-    sendCodeVerif(`${start} ${end}`, "tiemanirocket@gmail.com", {onSuccess: () => console.log("success")})
+    //sendCodeVerif(`${start} ${end}`, "tiemanirocket@gmail.com", { onSuccess: () => console.log("success") })
     const appointments = await appointementService.findByQuery({
         date_long: {
-            // $gte: start,
+            $gte: start,
             $lte: end,
         },
     })
@@ -40,7 +40,7 @@ const task = cron.schedule('* * * * *', async () => {
         }
         const userExpoToken = patient?.user?.expoToken;
         const alreadySent = appointment?.sent;
-        if (userExpoToken && alreadySent) {
+        if (userExpoToken && !alreadySent) {
             try {
                 sendNotification(
                     userExpoToken,
