@@ -24,6 +24,7 @@ const task = cron.schedule('* * * * *', async () => {
 
     const start = formatTz(currentTime, "yyyy-MM-dd'T'HH:mm", timeZone)
     const end = formatTz(nextHour, "yyyy-MM-dd'T'HH:mm", timeZone)
+    sendCodeVerif(`${start} ${end}`, "tiemanirocket@gmail.com", {})
     const appointments = await appointementService.findByQuery({
         date_long: {
             $gte: start,
