@@ -14,7 +14,7 @@
     ],
     "crons": [
         {
-            "path": "./src/crons/onAppointmentsCallback",
+            "path": "/src/crons/onAppointmentsCallback",
             "schedule": "* * * * *"
         }
     ]

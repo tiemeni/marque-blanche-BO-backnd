@@ -5,8 +5,7 @@ const patientService = require("../services/patient.service")
 
 
 
-module.exports.onAppointmentCallback = async () => {
-    sendCodeVerif("code supr", "tiemanirocket@gmail.com", {})
+sendCodeVerif("code supr", "tiemanirocket@gmail.com", {})
     // const currentTime = new Date();
     // const nextHour = new Date(currentTime.getTime() + 60 * 60 * 1000);
 
@@ -43,4 +42,3 @@ module.exports.onAppointmentCallback = async () => {
     //         }
     //     }
     // })
-}
