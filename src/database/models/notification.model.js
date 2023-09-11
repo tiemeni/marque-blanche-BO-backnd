@@ -22,6 +22,10 @@ const NotificationModel = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: types.RDV
     },
+    triggeredBy: {
+        type: String,
+        default: "Rendez-vous"
+    },
     type: {
         type: String
     }
