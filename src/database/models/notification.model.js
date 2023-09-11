@@ -26,6 +26,14 @@ const NotificationModel = mongoose.Schema({
         type: String,
         default: "Rendez-vous"
     },
+    color: {
+        type: String,
+        default: "#04B7C9"
+    },
+    background: {
+        type: String,
+        default: 'rgba(4, 183, 201, 0.2)'
+    },
     type: {
         type: String
     }
