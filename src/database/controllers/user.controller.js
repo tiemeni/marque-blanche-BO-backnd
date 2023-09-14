@@ -9,6 +9,7 @@ const { generateRandomCode, sendCodeVerif } = require("../../helpers");
 
 const createUser = async (req, res) => {
   const data = req.body;
+  console.log(data);
   try {
     // if user already exist
     const condition = req.idCentre
@@ -18,7 +19,7 @@ const createUser = async (req, res) => {
     if (isUserExist)
       return handler.errorHandler(
         res,
-        "User already exist",
+        "L'utilisateur existe déjà",
         httpStatus.BAD_REQUEST
       );
 
@@ -295,12 +296,13 @@ const updatePushToken = async (req, res) => {
 };
 
 const processVerifCode = async (req, res) => {
+  console.log(req.body);
   try {
     const { email } = req.body;
-    const register = req.register;
+    const register = req.body.register;
     let codeVerif;
     const userExist = await userService.findOneByQuery({ email: email });
-    if (userExist || register === true) {
+    if ((userExist && !register) || (register === true && !userExist)) {
       codeVerif = generateRandomCode();
       const callbacks = {
         onError: (err) =>
@@ -313,7 +315,13 @@ const processVerifCode = async (req, res) => {
       };
       const result = await sendCodeVerif(codeVerif, email, callbacks);
     } else {
-      return handler.errorHandler(res, "email doesn't exist!", 404);
+      return handler.errorHandler(
+        res,
+        userExist
+          ? "l'utilisateur existe deja , connextez vous"
+          : "l'utilisateur n'existe pas!",
+        404
+      );
     }
   } catch (error) {
     return handler.errorHandler(res, error, httpStatus.INTERNAL_SERVER_ERROR);
