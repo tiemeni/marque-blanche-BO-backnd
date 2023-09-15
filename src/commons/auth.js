@@ -13,7 +13,7 @@ module.exports = {
     },
     generateToken: async (payload) => {
         return await jwt.sign(payload, process.env.jwt || env.jwt, {
-            expiresIn: 3600*24*7
+            expiresIn: "7d"
         });
     },
     verifyToken: async (token) => {
