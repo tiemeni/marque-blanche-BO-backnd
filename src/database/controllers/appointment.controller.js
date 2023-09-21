@@ -89,7 +89,7 @@ const makeAppointment = async (req, res) => {
             type: notificationType.APPOINTMENT_CREATED
         })
 
-        return handler.successHandler(res, result, httpStatus.CREATED)
+        return handler.successHandler(res, rdv, httpStatus.CREATED)
     } catch (error) {
         return handler.errorHandler(res, error.message, httpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -230,7 +230,7 @@ const searchAvailabilities = async (req, res) => {
     });
 
     // Si rdvs non trouvés pour certains jours remplacer par []
-    const slot = daysTab ? daysTab : { start: startDate, end: endOfInterval }
+    const slot = daysTab || { start: startDate, end: endOfInterval }
     const rdvs = replaceIfEmpty(groupedRdv, slot)
 
     availabilities = calculateAvailability(practitioner, rdvs, querySlot);
