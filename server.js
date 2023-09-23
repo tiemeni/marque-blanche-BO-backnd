@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const PORT = process.env.PORT || 3500;
 const cors = require('cors')
-
 const auth = require('./src/middlewares/auth.middleware')
 const checkCentre = require('./src/middlewares/center.middleware')
 
@@ -41,6 +40,7 @@ server.use(cors({
   allowedHeaders: true,
   credentials: true
 }))
+server.use(express.static('public'))
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));

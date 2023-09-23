@@ -1,4 +1,40 @@
-const { sendNotification } = require("./src/helpers");
+// const nodemailer = require("nodemailer");
+// const ejs = require("ejs");
 
-sendNotification("cy8VhEb8QK24zxd04QSBOg:APA91bFf0lyS1vm8DqIK6AbvLMiUuMkcf9JQnh5raXp9X2cEJq36RHZOP5FaGs-ELhKMYXULKIpW7fX8g60NbPW7Se4jLEWkCRekZdvZAx85brf-azWsfM-qSS0eE8qvF0D_zeL2mRJm", "body", "title", "subtitle")
+const { sendCodeVerif } = require("./src/helpers");
 
+// var transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: "tiemanirocket@gmail.com",
+//     pass: "nvpwfjnwfdqxcrly",
+//   },
+// });
+
+// ejs.renderFile(
+//   __dirname + "/public/mailTemplate.ejs",
+//   {
+//     code: "658616265",
+//   },
+//   (err, data_) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       var mainOption = {
+//         from: "tiemanirocket@gmail.com",
+//         to: "tiemanirocket@gmail.com",
+//         subject: "test",
+//         html: data_,
+//       };
+//       transporter.sendMail(mainOption, (err, data__) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           console.log(data__);
+//         }
+//       });
+//     }
+//   }
+// );
+
+sendCodeVerif(56, "tiemanirocket@gmail.com", {});
