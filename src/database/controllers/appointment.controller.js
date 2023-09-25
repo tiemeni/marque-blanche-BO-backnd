@@ -110,9 +110,9 @@ const makeAppointment = async (req, res) => {
       appointment: result?._id,
       type: notificationType.APPOINTMENT_CREATED,
     });
-    //emit socket event for client
+
     socket.to(data.clientID).emit("notification", result);
-    return handler.successHandler(res, result, httpStatus.CREATED);
+    return handler.successHandler(res, rdv, httpStatus.CREATED);
   } catch (error) {
     return handler.errorHandler(
       res,
@@ -339,14 +339,6 @@ const deleteOne = async (req, res) => {
       httpStatus.INTERNAL_SERVER_ERROR
     );
   }
-};
-
-const sendAppointmentNotification = (socket, message) => {
-  // Accédez au clientId à partir de la socket
-  const clientId = socket.clientId;
-
-  // Émettez un événement uniquement vers le client en utilisant le clientId
-  io.to(clientId).emit("notification", message);
 };
 
 module.exports = {

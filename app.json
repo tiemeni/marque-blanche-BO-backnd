@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "aecc8f7f-14c5-40da-a58f-b6b3c5560335"
+      }
+    },
+    "android": {
+      "package": "com.tiemeni.apiinit"
+    }
+  }
+}
