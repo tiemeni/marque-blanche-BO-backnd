@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const PORT = process.env.PORT || 3500;
 const cors = require("cors");
-const { Server } = require("socket.io");
 const http = require("http");
 
 const auth = require("./src/middlewares/auth.middleware");

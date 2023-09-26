@@ -105,11 +105,20 @@ const deleteAll = async (req, res) => {
 };
 
 const searchPatientsByKey = async (req, res) => {
-  const key = req.params.searchKey;
-  const query = {
-    name: { $regex: key, $options: "i" },
-    idCentre: req.idCentre,
+  const key = req.query;
+  const formatQuery = (obj) => {
+    let res = {};
+    Object.keys(obj).forEach((key) => {
+      res[key] =
+        key?.toString() == "idCentre"
+          ? obj[key]
+          : { $regex: obj[key], $options: "i" };
+    });
+    return res;
   };
+
+  const query = formatQuery(key);
+  
   try {
     const founds = await patientService.findPatientByQuery(query);
     if (founds) {
