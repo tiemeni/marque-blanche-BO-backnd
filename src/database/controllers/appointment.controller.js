@@ -20,7 +20,6 @@ const formatTz = require("date-fns-tz/format");
 const notificationService = require("../../services/notification.service");
 const notificationType = require("../../commons/notification.type");
 const fr = require("date-fns/locale/fr");
-const { socket } = require("../../../server");
 
 const timeZone = "Africa/Douala";
 
@@ -76,12 +75,14 @@ const task = cron.schedule("* * * * *", async () => {
  */
 const makeAppointment = async (req, res) => {
   const data = req.body;
+  const { io } = req;
 
   try {
     const isExist = await appointementService.findOneByQuery({
       startTime: data.startTime,
       practitioner: data.practitioner,
       center: data.center,
+      lieu: data.lieu,
     });
     if (isExist)
       return handler.errorHandler(
@@ -99,7 +100,7 @@ const makeAppointment = async (req, res) => {
     const rdv = await appointementService.findByQuery({ _id: result._id });
 
     // Create notification
-    await notificationService.create({
+    const notification = await notificationService.create({
       title: "Nouveau rendez-vous",
       content: `Rendez-vous pris pour ${format(
         new Date(result.date_long),
@@ -111,7 +112,10 @@ const makeAppointment = async (req, res) => {
       type: notificationType.APPOINTMENT_CREATED,
     });
 
-    
+    // Get user informations
+    const { user } = await findUserByFiche(data.patient);
+    io.to(user._id.toString()).emit("notification", notification);
+
     return handler.successHandler(res, rdv, httpStatus.CREATED);
   } catch (error) {
     return handler.errorHandler(
@@ -124,7 +128,6 @@ const makeAppointment = async (req, res) => {
 
 const upadteAppointment = async (req, res) => {
   const data = req.body;
-  console.log(req.params.idRdv, req.query.idCentre);
   try {
     const result = await appointementService.editeOneByQuery(
       req.params.idRdv,
@@ -332,6 +335,19 @@ const deleteOne = async (req, res) => {
       center: req.idCentre,
     });
     return handler.successHandler(res, result, httpStatus.OK);
+  } catch (error) {
+    return handler.errorHandler(
+      res,
+      error.message,
+      httpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+};
+
+const findUserByFiche = async (ficheID) => {
+  try {
+    const result = await patientService.findPatientById(ficheID);
+    return result;
   } catch (error) {
     return handler.errorHandler(
       res,

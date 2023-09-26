@@ -35,7 +35,24 @@ const { startServer } = require("./src/helpers");
 const { verifyToken } = require("./src/routes/verifyToken");
 
 const app = http.createServer(server);
-const io = new Server(app);
+const io = require("./socket").initialize(app);
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+  setTimeout(() => {
+    socket.emit("connected", "user connected");
+  }, 2000);
+
+  socket.on("setUserId", (userId) => {
+    console.log("room: ", userId);
+    socket.join(userId);
+    socket.emit("saved", "user saved");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
 
 require("dotenv").config();
 
@@ -51,6 +68,10 @@ server.use(
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
+server.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 // routes
 server.use("/users", checkCentre, usersRoutes);
@@ -75,25 +96,4 @@ server.get("/checkVersion", (req, res) => {
   res.send("version backoffice gatewayDoc 24-07 midi");
 });
 
-io.use((socket, next) => {
-  const clientId = socket.id;
-  socket.clientId = clientId; // Attachez le clientId à la socket
-  next();
-});
-
-io.on("connection", (socket) => {
-  console.log(io)
-  setTimeout(() => {
-    socket.emit("connected", {
-      clientID: socket.id,
-    });
-  }, 2000);
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
-  });
-});
-
 startServer({ connectDB, server: app, startServer, PORT });
-
-module.exports = { server, socket: io };
