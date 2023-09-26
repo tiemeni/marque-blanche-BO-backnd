@@ -111,7 +111,7 @@ const makeAppointment = async (req, res) => {
       type: notificationType.APPOINTMENT_CREATED,
     });
 
-    socket.to(data.clientID).emit("notification", result);
+    
     return handler.successHandler(res, rdv, httpStatus.CREATED);
   } catch (error) {
     return handler.errorHandler(
