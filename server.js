@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const PORT = process.env.PORT || 3500;
 const cors = require("cors");
-const { Server } = require("socket.io");
 const http = require("http");
 
 const auth = require("./src/middlewares/auth.middleware");
@@ -56,15 +55,14 @@ io.on("connection", (socket) => {
 
 require("dotenv").config();
 
-server.use(
-  cors({
-    origin: "*",
-    methods: "*",
-    preflightContinue: true,
-    allowedHeaders: true,
-    credentials: true,
-  })
-);
+server.use(cors({
+  origin: "*",
+  methods: "*",
+  preflightContinue: true,
+  allowedHeaders: true,
+  credentials: true
+}))
+server.use(express.static('public'))
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
