@@ -74,6 +74,7 @@ const task = cron.schedule("* * * * *", async () => {
  * Enregistrer un rendez-vous
  */
 const makeAppointment = async (req, res) => {
+  console.log("creatn appoint");
   const data = req.body;
   const { io } = req;
 
@@ -96,6 +97,7 @@ const makeAppointment = async (req, res) => {
       center: req.idCentre,
       created_at: formatTz(new Date(), "yyyy-MM-dd'T'HH:mm", timeZone),
     });
+    console.log(result);
 
     const rdv = await appointementService.findByQuery({ _id: result._id });
 
@@ -111,10 +113,13 @@ const makeAppointment = async (req, res) => {
       appointment: result?._id,
       type: notificationType.APPOINTMENT_CREATED,
     });
-
+    console.log("create notif");
     // Get user informations
     const { user } = await findUserByFiche(data.patient);
+    console.log("searched ich ");
+
     io.to(user._id.toString()).emit("notification", notification);
+    console.log("emit notif ", user._id.toString());
 
     return handler.successHandler(res, rdv, httpStatus.CREATED);
   } catch (error) {
@@ -128,6 +133,7 @@ const makeAppointment = async (req, res) => {
 
 const upadteAppointment = async (req, res) => {
   const data = req.body;
+  const io = req.io;
   try {
     const result = await appointementService.editeOneByQuery(
       req.params.idRdv,
@@ -136,6 +142,25 @@ const upadteAppointment = async (req, res) => {
         ...data,
       }
     );
+
+    const rdv = await appointementService.findByQuery({ _id: result._id });
+    const notification = await notificationService.create({
+      title: "Rendez-vous reporté",
+      content: `Rendez-vous reporté pour ${format(
+        new Date(result.date_long),
+        "EEEE dd MMMM yyyy à HH:mm",
+        { locale: fr }
+      )} au lieu dit ${rdv[0].lieu.label}`,
+      receiver: result?.patient?._id,
+      appointment: result?._id,
+      type: notificationType.APPOINTMENT_CREATED,
+    });
+
+    // Get user informations
+    const { user } = await findUserByFiche(result?.patient?._id);
+
+    io.to(user?._id.toString()).emit("notification", notification);
+    
     const formatedData = {
       id: result?._id,
       civility: result?.practitioner?.civility?.label,
