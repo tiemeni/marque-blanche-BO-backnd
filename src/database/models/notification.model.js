@@ -36,6 +36,10 @@ const NotificationModel = mongoose.Schema({
     },
     type: {
         type: String
+    },
+    unreaded: {
+        type: Boolean,
+        default: true
     }
 })
 
