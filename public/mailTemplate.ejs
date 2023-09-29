@@ -6,9 +6,9 @@
     <title>Gatewaydoc Mail Template</title>
     
 </head>
-<body style="padding: 20px;font-family: 'Times New Roman', Times, serif;font-weight: 400; font-size: 1.5em;">
-    <section class="main" style="margin-top: 80px;border: 1px solid transparent; " >
-        <div class="first" style="padding: 10px; width: 100%; height: 60px; background-color: rgba(79, 177, 201, 0.966); border-radius: 20px 20px 0px 0px;">
+<body>
+    <section class="main" style="margin-top: 80px;border: 1px solid transparent; font-weight: 400; font-size: 1.5em;" >
+        <div class="first" style="padding: 10px; height: 60px; background-color: rgba(79, 177, 201, 0.966); border-radius: 20px 20px 0px 0px;">
             <h1 style="color: white; font-family: 'Times New Roman', Times, serif;">Gatewaydoc</h1>
         </div>
         <div class="second" style="padding: 25px; padding-left: 30px; background-color: rgba(5, 199, 247, 0.048);">
@@ -17,14 +17,13 @@
                 Merci de faire confiance à Gatewaydoc pour votre santé;<br><br> 
                 Afin de finaliser et de confirmer votre adresse e-mail,
                 veuillez renseigner votre code de confirmation ci-dessous :<br>
-                <div class="code" style="width: 100px; height: 50px; padding: 15px; margin-top: 20px; margin-left: 500px; background-color:  rgba(79, 177, 201, 0.966); color: white; text-align: center;  
+                <div class="code" style="width: 100px; height: 50px; padding: 15px; background-color:  rgba(79, 177, 201, 0.966); color: white; text-align: center;  
                     @media screen and (min-width: 481px) {
     
                     .main{
                         width: 100%;
                     }
                     .code{
-                        margin-left: 50px;
                         margin-bottom: 15px;
                     }
                   }
@@ -34,19 +33,18 @@
                     
                     }
                     .code{
-                        margin-left: 0px;
                         margin-bottom: 15px;
                     }
                     
                 }
-                  ">178546<br></div>
+                  "><%= code %><br></div>
             </p>
             <p class="footer" >
                 <span class="merci" style="font-weight: bold;">Merci,<br></span>
                 Gatewaydoc
             </p>
         </div>
-        <div class="last" style="padding: 20px; padding-left: 30px; background-color:#2c3e50; color: white; border: 1px solid transparent; width: 100%; height: 60px;border-radius: 0px 0px 20px 20px;  ">
+        <div class="last" style="padding: 20px; padding-left: 30px; background-color:#2c3e50; color: white; border: 1px solid transparent;  height: 60px;border-radius: 0px 0px 20px 20px;  ">
             <h4 style="font-size: 0.8em; margin: 2px;">Besoin d'aide?</h4>
             <h6 style="padding-top: 5px; font-size: 0.7em; margin: 2px;">N'hésitez pas à contacter notre service client</h6>
             <a href="https://www.gatewaydoc.com/contact" style="font-size: 0.7em; color: rgba(79, 177, 201, 0.966);">Contactez-nous</a>
