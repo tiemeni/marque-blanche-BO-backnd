@@ -9,4 +9,7 @@ module.exports = {
   getByQuery: async (query) => {
     return await Notifications.find(query).sort({ created_at: -1 });
   },
+  updateNotifications: async (filter, query) => {
+    return await Notifications.updateMany(filter, query);
+  },
 };
