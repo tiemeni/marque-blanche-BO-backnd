@@ -55,13 +55,7 @@ io.on("connection", (socket) => {
 
 require("dotenv").config();
 
-server.use(cors({
-  origin: "*",
-  methods: "*",
-  preflightContinue: true,
-  allowedHeaders: true,
-  credentials: true
-}))
+server.use(cors())
 server.use(express.static('public'))
 server.use(cookieParser());
 server.use(bodyParser.json());
