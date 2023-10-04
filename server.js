@@ -55,17 +55,17 @@ io.on("connection", (socket) => {
 
 require("dotenv").config();
 
-server.use(express.static("public"));
+server.use(cors({
+  origin: "*",
+  methods: "*",
+  preflightContinue: true,
+  allowedHeaders: true,
+  credentials: true
+}))
+server.use(express.static('public'))
 server.use(cookieParser());
 server.use(bodyParser.json());
-server.use(
-  cors({
-    origin: ["*"],
-    methods: "*",
-    preflightContinue: true,
-    credentials: true,
-  })
-);
+
 server.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();
