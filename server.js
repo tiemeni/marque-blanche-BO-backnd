@@ -65,6 +65,11 @@ server.use(cors({
 server.use(express.static('public'))
 server.use(cookieParser());
 server.use(bodyParser.json());
+
+server.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use((req, res, next) => {
   req.io = io;

@@ -50,6 +50,7 @@ const createUser = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
+  console.log("in here ..............")
   const { email, password } = req.body;
 
   try {
