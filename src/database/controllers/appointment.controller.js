@@ -153,7 +153,7 @@ const upadteAppointment = async (req, res) => {
     const { user } = await findUserByFiche(result?.patient?._id);
 
     io.to(user?._id.toString()).emit("notification", notification);
-    
+
     const formatedData = {
       id: result?._id,
       civility: result?.practitioner?.civility?.label,
@@ -220,13 +220,24 @@ const getAppointments = async (req, res) => {
 
     for (const appointment of appointments) {
       const { practitioner } = appointment;
-      const { civility } = practitioner;
+      const civility = practitioner?.civility;
+      const startDate = new Date(appointment.date);
+      const endDate = new Date(appointment.date);
+      const [startHour, startMinute] = appointment.startTime.split(":");
+      const [endHour, endMinute] = appointment.endTime.split(":");
+      startDate.setHours(parseInt(startHour, 10));
+      startDate.setMinutes(parseInt(startMinute, 10));
+      endDate.setHours(parseInt(endHour, 10));
+      endDate.setMinutes(parseInt(endMinute, 10));
+
+      const { name, surname } = appointment.patient;
+
       result.push({
         _id: appointment._id,
         civility: civility?.abreviation || civility?.label,
-        name: practitioner.name,
-        surname: practitioner.surname,
-        profession: practitioner.job.title,
+        name: practitioner?.name,
+        surname: practitioner?.surname,
+        profession: practitioner?.job?.title,
         patient: appointment.patient,
         motif: appointment.motif.label,
         timeStart: appointment.startTime,
@@ -239,9 +250,13 @@ const getAppointments = async (req, res) => {
         duration: appointment.duration,
         provenance: appointment.provenance,
         wasMoved: appointment.wasMoved,
-        resourceId: practitioner._id,
+        resourceId: practitioner?._id,
         status: appointment.status,
         created_at: appointment.created_at,
+        start: startDate,
+        end: endDate,
+        textColor: "#000",
+        duree: appointment.duration,
       });
     }
 
