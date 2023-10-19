@@ -257,7 +257,7 @@ const getAppointments = async (req, res) => {
         end: endDate,
         textColor: "#000",
         duree: appointment.duration,
-        date_rdv: appointment.date
+        dateRdv: appointment.date
       });
     }
 
