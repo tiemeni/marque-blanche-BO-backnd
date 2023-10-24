@@ -33,18 +33,21 @@ const connectDB = require("./src/loaders/mongoose");
 const { startServer } = require("./src/helpers");
 const { verifyToken } = require("./src/routes/verifyToken");
 
-const app = http.createServer(server);
+const app = http.createServer(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 const io = require("./socket").initialize(app);
 
 io.on("connection", (socket) => {
-  console.log("A user connected");
   setTimeout(() => {
     socket.emit("connected", "user connected");
-    console.log("event emitted")
+    console.log("event emitted");
   }, 2000);
 
   socket.on("setUserId", (userId) => {
-    console.log("room: ", userId);
+    console.log("romm id: ", userId);
     socket.join(userId);
     socket.emit("saved", "user saved");
   });
@@ -56,14 +59,16 @@ io.on("connection", (socket) => {
 
 require("dotenv").config();
 
-server.use(cors({
-  origin: "*",
-  methods: "*",
-  preflightContinue: true,
-  allowedHeaders: true,
-  credentials: true
-}))
-server.use(express.static('public'))
+server.use(
+  cors({
+    origin: "*",
+    methods: "*",
+    preflightContinue: true,
+    allowedHeaders: true,
+    credentials: true,
+  })
+);
+server.use(express.static("public"));
 server.use(cookieParser());
 server.use(bodyParser.json());
 
