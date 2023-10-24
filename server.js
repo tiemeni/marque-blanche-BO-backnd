@@ -40,6 +40,7 @@ io.on("connection", (socket) => {
   console.log("A user connected");
   setTimeout(() => {
     socket.emit("connected", "user connected");
+    console.log("event emitted")
   }, 2000);
 
   socket.on("setUserId", (userId) => {
