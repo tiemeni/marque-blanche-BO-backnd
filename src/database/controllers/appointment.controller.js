@@ -152,7 +152,7 @@ const upadteAppointment = async (req, res) => {
     // Get user informations
     const { user } = await findUserByFiche(result?.patient?._id);
 
-    io.to(req.query.idCentre,).emit("refetchEvents", "Nouveau rendez-vous crée");
+    io.to(req.query.idCentre).emit("refetchEvents", "Nouveau rendez-vous crée");
 
     const formatedData = {
       id: result?._id,
@@ -260,7 +260,7 @@ const getAppointments = async (req, res) => {
         textColor: "#000",
         duree: appointment.duration,
         dateLong: appointment.date_long ?? "",
-        dateRdv: appointment.date
+        dateRdv: appointment.date,
       });
     }
 
@@ -367,11 +367,17 @@ const deleteAll = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
+  const { io } = req;
   try {
     const result = await appointmentService.findAndDelete(req.params.id, {
       center: req.idCentre,
     });
-    return handler.successHandler(res, result, httpStatus.OK);
+    io.to(req.idCentre).emit("refetchEvents", "Nouveau rendez-vous crée");
+    return handler.successHandler(
+      res,
+      "Le rendez-vous a bien été supprimé",
+      httpStatus.OK
+    );
   } catch (error) {
     return handler.errorHandler(
       res,
@@ -394,6 +400,40 @@ const findUserByFiche = async (ficheID) => {
   }
 };
 
+/**
+ * @params idrdv, date, startTime, endTime
+ */
+const duplicateAppointment = async (req, res) => {
+  const { idRdv, date, startTime, endTime } = req.body;
+  try {
+    const result = await appointementService.findOneByQuery({ _id: idRdv });
+    if (!result)
+      return handler.errorHandler(
+        res,
+        "Aucun rendez-vous trouvé avec cet identifiant",
+        httpStatus.NOT_FOUND
+      );
+    const copy = {
+      ...result._doc,
+      date,
+      startTime,
+      endTime,
+      dayOfWeek: new Date(date).getDay(),
+      created_at: new Date(),
+    };
+    delete copy._id;
+
+    const duplicata = await appointementService.createAppointment(copy);
+    return handler.successHandler(res, duplicata, httpStatus.CREATED);
+  } catch (error) {
+    return handler.errorHandler(
+      res,
+      error.message,
+      httpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+};
+
 module.exports = {
   makeAppointment,
   presaveAppointment,
@@ -403,4 +443,5 @@ module.exports = {
   getAppointments,
   updateExistingAppointments,
   deleteOne,
+  duplicateAppointment,
 };
