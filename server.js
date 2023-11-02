@@ -64,7 +64,7 @@ server.use(
     origin: "*",
     methods: "*",
     preflightContinue: true,
-    allowedHeaders: true,
+    allowedHeaders: ['Authorization', 'Content-Type'],
     credentials: true,
   })
 );
