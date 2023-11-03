@@ -2,7 +2,7 @@ const router = require('express').Router()
 const appointementController = require('../database/controllers/appointment.controller')
 
 router.get('/', appointementController.getAppointments)
-router.get('/duplicate', appointementController.duplicateAppointment)
+router.post('/duplicate', appointementController.duplicateAppointment)
 router.post('/enregistrer_rdv', appointementController.makeAppointment)
 router.get('/rechercher_dispo', appointementController.searchAvailabilities)
 router.put('/update/:idRdv', appointementController.upadteAppointment)

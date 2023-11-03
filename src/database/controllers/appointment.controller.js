@@ -143,7 +143,7 @@ const upadteAppointment = async (req, res) => {
         new Date(result.date_long),
         "EEEE dd MMMM yyyy à HH:mm",
         { locale: fr }
-      )} au lieu dit ${rdv[0].lieu.label}`,
+      )} au lieu dit ${rdv[0].lieu?.label}`,
       receiver: result?.patient?._id,
       appointment: result?._id,
       type: notificationType.APPOINTMENT_CREATED,
@@ -404,6 +404,7 @@ const findUserByFiche = async (ficheID) => {
  * @params idrdv, date, startTime, endTime
  */
 const duplicateAppointment = async (req, res) => {
+  const { io } = req;
   const { idRdv, date, startTime, endTime } = req.body;
   try {
     const result = await appointementService.findOneByQuery({ _id: idRdv });
@@ -424,6 +425,7 @@ const duplicateAppointment = async (req, res) => {
     delete copy._id;
 
     const duplicata = await appointementService.createAppointment(copy);
+    io.to(req.idCentre).emit("refetchEvents", "Nouveau rendez-vous crée");
     return handler.successHandler(res, duplicata, httpStatus.CREATED);
   } catch (error) {
     return handler.errorHandler(
