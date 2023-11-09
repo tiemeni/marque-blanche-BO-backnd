@@ -65,6 +65,14 @@ const appointmentModel = mongoose.Schema({
     created_at: {
         type: Date,
         default: Date.now
+    },
+    backgroundColor: {
+        type: String,
+        default: '#3788d8'
+    },
+    borderColor: {
+        type: String,
+        default: '#3788d8'
     }
 })
 

@@ -9,6 +9,7 @@
     "body-parser": "^1.19.2",
     "chalk": "^5.2.0",
     "cloudinary": "^1.40.0",
+    "color-names": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",

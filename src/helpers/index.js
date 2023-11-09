@@ -7,6 +7,7 @@ const fr = require("date-fns/locale/fr");
 const nodemailer = require("nodemailer");
 const { utcToZonedTime } = require("date-fns-tz");
 const formatTz = require("date-fns-tz/format");
+const colorNames = require("color-names");
 
 const timeZone = "Africa/Douala";
 
@@ -370,3 +371,24 @@ module.exports.sendNotification = (token, body, title, subtitle) => {
       });
   });
 };
+
+module.exports.getContrastColor = (hexColor) => {
+  // Si la couleur est un nom (ex: 'green'), convertir en code hexadécimal
+  const hex = hexColor.startsWith('#') ? hexColor : colorNameToHex(hexColor);
+
+  // Extraire les composants RVB
+  const r = parseInt(hex.substr(1, 2), 16);
+  const g = parseInt(hex.substr(3, 2), 16);
+  const b = parseInt(hex.substr(5, 2), 16);
+
+  // Calculer la luminosité selon la formule W3C
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Retourner le texte blanc pour les couleurs sombres et noir pour les couleurs claires
+  return luminance > 0.5 ? "black" : "white";
+};
+
+// Fonction pour convertir le nom de couleur en code hexadécimal
+function colorNameToHex(color) {
+  return colorNames[color.toLowerCase()] ?? "#3788d8"
+}

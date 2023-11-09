@@ -9,6 +9,7 @@ const {
   formatQuery,
   sendNotification,
   sendCodeVerif,
+  getContrastColor,
 } = require("../../helpers");
 const appointementService = require("../../services/appointment.service");
 const userService = require("../../services/user.service");
@@ -127,6 +128,7 @@ const makeAppointment = async (req, res) => {
 const upadteAppointment = async (req, res) => {
   const data = req.body;
   const io = req.io;
+  data.borderColor = data.status && data.status == 'Annulé' ? "red" : "";
   try {
     const result = await appointementService.editeOneByQuery(
       req.params.idRdv,
@@ -232,8 +234,6 @@ const getAppointments = async (req, res) => {
       endDate.setHours(parseInt(endHour, 10));
       endDate.setMinutes(parseInt(endMinute, 10));
 
-      const { name, surname } = appointment.patient;
-
       result.push({
         _id: appointment._id,
         civility: civility?.abreviation || civility?.label,
@@ -258,10 +258,12 @@ const getAppointments = async (req, res) => {
         created_at: appointment.created_at,
         start: startDate,
         end: endDate,
-        textColor: "#000",
+        textColor: getContrastColor(appointment.motif.couleur),
         duree: appointment.duration,
         dateLong: appointment.date_long ?? "",
         dateRdv: appointment.date,
+        backgroundColor: appointment.motif?.couleur,
+        borderColor: appointment.borderColor
       });
     }
 
